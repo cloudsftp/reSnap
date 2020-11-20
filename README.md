@@ -1,5 +1,7 @@
 # reSnap
 
+![a demo of reSnap](misc/demo.gif)
+
 ## Prequisites
 
 - SSH-access to your reMarkable tablet. (recommended: SSH-key so you don't have to type in your root password every time)
