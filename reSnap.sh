@@ -1,16 +1,21 @@
 #!/bin/sh
 
 ssh_host="root@10.11.99.1"
-output_file=snapshot.png
+output_file="snapshot.png"
 
 while [ $# -gt 0 ]; do
   case "$1" in
     -p | --portrait)
-      landscape=false
+      portrait_filter="-vf transpose=1"
       shift
       ;;
     -s | --source)
       ssh_host="$2"
+      shift
+      shift
+      ;;
+    -o | --output)
+      output_file="$2"
       shift
       shift
       ;;
@@ -46,6 +51,8 @@ head_fb0="dd if=/dev/fb0 count=1 bs=$window_bytes 2>/dev/null"
 
 read_command="$head_fb0 | $compress"
 
+echo $portrait
+
 ssh_cmd "$read_command" \
   | $decompress \
   | ffmpeg -y \
@@ -53,6 +60,7 @@ ssh_cmd "$read_command" \
     -pixel_format rgb565le \
     -video_size "$width,$height" \
     -i - \
-    -frames:v 1 $output_file
+    $portrait_filter \
+    -frames:v 1 $output_file \
 
 feh --fullscreen $output_file
