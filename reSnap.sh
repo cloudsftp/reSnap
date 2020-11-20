@@ -49,14 +49,14 @@ head_fb0="dd if=/dev/fb0 count=1 bs=$window_bytes 2>/dev/null"
 
 read_command="$head_fb0 | $compress"
 
-ssh_cmd "$read_command" \
-  | $decompress \
-  | ffmpeg -y \
+ssh_cmd "$read_command" |
+  $decompress |
+  ffmpeg -y \
     -f rawvideo \
     -pixel_format rgb565le \
     -video_size "$width,$height" \
     -i - \
     "$portrait_filter" \
-    -frames:v 1 "$output_file" \
+    -frames:v 1 "$output_file"
 
 feh --fullscreen "$output_file"
