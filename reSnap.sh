@@ -5,20 +5,20 @@ output_file="snapshot.png"
 
 while [ $# -gt 0 ]; do
   case "$1" in
-    -p | --portrait)
-      portrait_filter="-vf transpose=1"
-      shift
-      ;;
-    -s | --source)
-      ssh_host="$2"
-      shift
-      shift
-      ;;
-    -o | --output)
-      output_file="$2"
-      shift
-      shift
-      ;;
+  -p | --portrait)
+    portrait_filter="-vf transpose=1"
+    shift
+    ;;
+  -s | --source)
+    ssh_host="$2"
+    shift
+    shift
+    ;;
+  -o | --output)
+    output_file="$2"
+    shift
+    shift
+    ;;
   esac
 done
 
@@ -26,8 +26,6 @@ done
 width=1408
 height=1872
 bytes_per_pixel=2
-loop_wait="true"
-loglevel="info"
 
 ssh_cmd() {
   ssh -o ConnectTimeout=1 "$ssh_host" "$@"
@@ -35,8 +33,8 @@ ssh_cmd() {
 
 # check if we are able to reach the remarkable
 if ! ssh_cmd true; then
-    echo "$ssh_host unreachable"
-    exit 1
+  echo "$ssh_host unreachable"
+  exit 1
 fi
 
 # compression commands
@@ -51,16 +49,14 @@ head_fb0="dd if=/dev/fb0 count=1 bs=$window_bytes 2>/dev/null"
 
 read_command="$head_fb0 | $compress"
 
-echo $portrait
-
-ssh_cmd "$read_command" \
-  | $decompress \
-  | ffmpeg -y \
+ssh_cmd "$read_command" |
+  $decompress |
+  ffmpeg -y \
     -f rawvideo \
     -pixel_format rgb565le \
     -video_size "$width,$height" \
     -i - \
-    $portrait_filter \
-    -frames:v 1 $output_file \
+    "$portrait_filter" \
+    -frames:v 1 "$output_file"
 
-feh --fullscreen $output_file
+feh --fullscreen "$output_file"
