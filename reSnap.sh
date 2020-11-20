@@ -5,6 +5,10 @@ output_file=snapshot.png
 
 while [ $# -gt 0 ]; do
   case "$1" in
+    -p | --portrait)
+      landscape=false
+      shift
+      ;;
     -s | --source)
       ssh_host="$2"
       shift
@@ -51,4 +55,4 @@ ssh_cmd "$read_command" \
     -i - \
     -frames:v 1 $output_file
 
-feh $output_file
+feh --fullscreen $output_file
