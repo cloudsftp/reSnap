@@ -3,6 +3,16 @@
 ssh_host="root@10.11.99.1"
 output_file=snapshot.png
 
+while [ $# -gt 0 ]; do
+  case "$1" in
+    -s | --source)
+      ssh_host="$2"
+      shift
+      shift
+      ;;
+  esac
+done
+
 # technical parameters
 width=1408
 height=1872
