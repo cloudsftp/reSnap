@@ -26,8 +26,6 @@ done
 width=1408
 height=1872
 bytes_per_pixel=2
-loop_wait="true"
-loglevel="info"
 
 ssh_cmd() {
   ssh -o ConnectTimeout=1 "$ssh_host" "$@"
