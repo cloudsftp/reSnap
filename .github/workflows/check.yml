@@ -21,3 +21,5 @@ jobs:
 
     - name: Shell Formatter
       uses: luizm/action-sh-checker@v0.1.8
+      env:
+        SHFMT_OPTS: -i 2
