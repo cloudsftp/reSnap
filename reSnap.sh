@@ -6,7 +6,7 @@ filters="null"
 
 while [ $# -gt 0 ]; do
   case "$1" in
-  -p | --portrait)
+  -l | --landscape)
     filters="$filters,transpose=1"
     shift
     ;;
