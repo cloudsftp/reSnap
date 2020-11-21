@@ -56,7 +56,7 @@ ssh_cmd "$read_command" |
     -pixel_format rgb565le \
     -video_size "$width,$height" \
     -i - \
-    "$portrait_filter" \
+    $portrait_filter \
     -frames:v 1 "$output_file"
 
 feh --fullscreen "$output_file"
