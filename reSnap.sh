@@ -1,6 +1,6 @@
 #!/bin/sh
 
-version="1.2"
+version="1.3"
 
 # default values
 ip="10.11.99.1"
