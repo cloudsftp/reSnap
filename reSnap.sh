@@ -1,9 +1,11 @@
 #!/bin/sh
 
+# default values
 ip="10.11.99.1"
 output_file="/tmp/reSnap/snapshot.png"
 filters="null"
 
+# parsing arguments
 while [ $# -gt 0 ]; do
   case "$1" in
   -l | --landscape)
@@ -37,6 +39,7 @@ width=1408
 height=1872
 bytes_per_pixel=2
 
+# ssh command
 ssh_host="root@$ip"
 ssh_cmd() {
   ssh -o ConnectTimeout=1 "$ssh_host" "$@"
@@ -60,6 +63,7 @@ head_fb0="dd if=/dev/fb0 count=1 bs=$window_bytes 2>/dev/null"
 
 read_command="$head_fb0 | $compress"
 
+# execute read_command on the reMarkable and encode received data
 ssh_cmd "$read_command" |
   $decompress |
   ffmpeg -y \
@@ -70,4 +74,5 @@ ssh_cmd "$read_command" |
     -vf "$filters" \
     -frames:v 1 "$output_file"
 
+# show the snapshot
 feh --fullscreen "$output_file"
