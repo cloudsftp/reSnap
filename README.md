@@ -24,7 +24,7 @@
 
 ### Options
 
-- `-s --source` You can specify a custom ssh-host. If you want to use reSnap over the Wifi, specify the IP of your reMarkable here.
+- `-s --source` You can specify a custom IP. If you want to use reSnap over the Wifi, specify the IP of your reMarkable here.
 - `-o --output` You can specify a custom output file for reSnap.
 - `-l --landscape` Snapshot has now the landscape orientation.
 

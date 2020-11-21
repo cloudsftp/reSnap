@@ -1,6 +1,6 @@
 #!/bin/sh
 
-ssh_host="root@10.11.99.1"
+ip="10.11.99.1"
 output_file="/tmp/reSnap/snapshot.png"
 filters="null"
 
@@ -11,7 +11,7 @@ while [ $# -gt 0 ]; do
     shift
     ;;
   -s | --source)
-    ssh_host="$2"
+    ip="$2"
     shift
     shift
     ;;
@@ -23,10 +23,10 @@ while [ $# -gt 0 ]; do
   -h | --help | *)
     echo "Usage: $0 [-l] [--source <ssh-host>] [--output <output-file>]"
     echo "Examples:"
-    echo "  $0                        # snapshot in portrait"
-    echo "  $0 -l                     # snapshot in landscape"
-    echo "  $0 -s root@192.168.2.104  # snapshot over wifi"
-    echo "  $0 -o snapshot.png        # saves the snapshot in the current directory"
+    echo "  $0                    # snapshot in portrait"
+    echo "  $0 -l                 # snapshot in landscape"
+    echo "  $0 -s 192.168.2.104   # snapshot over wifi"
+    echo "  $0 -o snapshot.png    # saves the snapshot in the current directory"
     exit 1
     ;;
   esac
@@ -37,6 +37,7 @@ width=1408
 height=1872
 bytes_per_pixel=2
 
+ssh_host="root@$ip"
 ssh_cmd() {
   ssh -o ConnectTimeout=1 "$ssh_host" "$@"
 }
