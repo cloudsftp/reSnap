@@ -8,7 +8,7 @@
 
 - lz4 on your reMarkable
   ```
-  scp lz4.arm.static root@10.11.99.1:~/lz4 
+  scp lz4.arm.static root@10.11.99.1:~/lz4
   ssh root@10.11.99.1 'chmod +x /home/root/lz4'
   ```
 
@@ -24,9 +24,11 @@
 
 ### Options
 
-- `-s --source` You can specify a custom ssh-host. If you want to use reSnap over the Wifi, specify the IP of your reMarkable here.
+- `-s --source` You can specify a custom IP. If you want to use reSnap over the Wifi, specify the IP of your reMarkable here.
 - `-o --output` You can specify a custom output file for reSnap.
-- `-p --portrait` Snapshot is now in portrait.
+- `-l --landscape` Snapshot has now the landscape orientation.
+- `-v --version` Displays version.
+- `-h --help` Displays help information.
 
 ### Disclaimer
 
