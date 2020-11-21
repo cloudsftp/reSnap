@@ -1,7 +1,7 @@
 #!/bin/sh
 
 ssh_host="root@10.11.99.1"
-output_file="snapshot.png"
+output_file="/tmp/reSnap/snapshot.png"
 filters="null"
 
 while [ $# -gt 0 ]; do
@@ -19,6 +19,15 @@ while [ $# -gt 0 ]; do
     output_file="$2"
     shift
     shift
+    ;;
+  -h | --help | *)
+    echo "Usage: $0 [-l] [--source <ssh-host>] [--output <output-file>]"
+    echo "Examples:"
+    echo "  $0                        # snapshot in portrait"
+    echo "  $0 -l                     # snapshot in landscape"
+    echo "  $0 -s root@192.168.2.104  # snapshot over wifi"
+    echo "  $0 -o snapshot.png        # saves the snapshot in the current directory"
+    exit 1
     ;;
   esac
 done
