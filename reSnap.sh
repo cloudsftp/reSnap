@@ -29,7 +29,7 @@ while [ $# -gt 0 ]; do
     echo "  $0 -l                 # snapshot in landscape"
     echo "  $0 -s 192.168.2.104   # snapshot over wifi"
     echo "  $0 -o snapshot.png    # saves the snapshot in the current directory"
-    exit 1
+    exit 2
     ;;
   esac
 done
