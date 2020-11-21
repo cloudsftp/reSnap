@@ -1,7 +1,7 @@
 #!/bin/sh
 
 ssh_host="root@10.11.99.1"
-output_file="snapshot.png"
+output_file="/temp/reSnap/snapshot.png"
 filters="null"
 
 while [ $# -gt 0 ]; do
