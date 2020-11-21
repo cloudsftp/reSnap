@@ -2,11 +2,12 @@
 
 ssh_host="root@10.11.99.1"
 output_file="snapshot.png"
+filters="null"
 
 while [ $# -gt 0 ]; do
   case "$1" in
   -p | --portrait)
-    portrait_filter="-vf transpose=1"
+    filters="$filters,transpose=1"
     shift
     ;;
   -s | --source)
@@ -56,7 +57,7 @@ ssh_cmd "$read_command" |
     -pixel_format rgb565le \
     -video_size "$width,$height" \
     -i - \
-    $portrait_filter \
+    -vf "$filters" \
     -frames:v 1 "$output_file"
 
 feh --fullscreen "$output_file"
