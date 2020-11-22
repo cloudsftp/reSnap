@@ -1,10 +1,17 @@
 #!/bin/sh
 
-version="1.3"
+version="1.4"
+
+# create temporary directory
+tmp_dir="/tmp/reSnap"
+if [ ! -d $tmp_dir ]
+then
+  mkdir $tmp_dir
+fi
 
 # default values
 ip="10.11.99.1"
-output_file="/tmp/reSnap/snapshot.png"
+output_file="$tmp_dir/snapshot_$(date +%F_%H-%M-%S).png"
 filters="null"
 
 # parsing arguments
