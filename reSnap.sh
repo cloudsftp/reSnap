@@ -4,8 +4,7 @@ version="1.4"
 
 # create temporary directory
 tmp_dir="/tmp/reSnap"
-if [ ! -d "$tmp_dir" ]
-then
+if [ ! -d "$tmp_dir" ]; then
   mkdir "$tmp_dir"
 fi
 
