@@ -131,7 +131,6 @@ else
 
 fi
 
-
 # compression commands
 if ssh_cmd "[ -f ~/lz4 ]"; then
   compress="\$HOME/lz4"
@@ -143,7 +142,6 @@ else
 fi
 
 decompress="lz4 -d"
-
 
 # read and compress the data on the reMarkable
 # decompress and decode the data on this machine
