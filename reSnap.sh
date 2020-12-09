@@ -54,7 +54,7 @@ ssh_cmd() {
   ssh -o ConnectTimeout=1 "$ssh_host" "$@"
 }
 
-# check if we are able to reach the remarkable
+# check if we are able to reach the reMarkable
 if ! ssh_cmd true; then
   echo "$ssh_host unreachable"
   exit 1

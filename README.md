@@ -1,5 +1,7 @@
 # reSnap
 
+reMarkable screenshots over ssh.
+
 [![rm1](https://img.shields.io/badge/rM1-supported-green)](https://remarkable.com/store/remarkable)
 [![rm2](https://img.shields.io/badge/rM2-supported-green)](https://remarkable.com/store/remarkable-2)
 
