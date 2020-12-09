@@ -1,21 +1,37 @@
 # reSnap
 
+reMarkable screenshots over ssh.
+
+[![rm1](https://img.shields.io/badge/rM1-supported-green)](https://remarkable.com/store/remarkable)
+[![rm2](https://img.shields.io/badge/rM2-supported-green)](https://remarkable.com/store/remarkable-2)
+
 ![a demo of reSnap](misc/demo.gif)
 
 ## Prequisites
 
-- SSH-access to your reMarkable tablet. (recommended: SSH-key so you don't have to type in your root password every time)
+- SSH-access to your reMarkable tablet.
+  [Tutorial](https://remarkablewiki.com/tech/ssh) <br>
+  (recommended: SSH-key so you don't have to type in your root password every time)
 
-- lz4 on your reMarkable
-  ```
-  scp lz4.arm.static root@10.11.99.1:~/lz4
-  ssh root@10.11.99.1 'chmod +x /home/root/lz4'
-  ```
+- The following programs are required on your reMarkable:
+  - `lz4`
+  - `head` (only reMarkable 2.0)
 
-- The following apt-packages are required:
-  - ffmpeg
-  - lz4
-  - feh
+- The following programs are required on your computer:
+  - `lz4`
+  - `ffmpeg`
+  - `feh`
+
+### Installing Programs on your reMarkable
+
+`lz4` and `head` are supplied with this program
+as `l4.arm` and `head.arm`.
+
+Both can be installed with
+```
+scp <prgrm>.arm root@10.11.99.1:~/<prgrm>
+ssh root@10.11.99.1 'chmod +x ~/<prgrm>'
+```
 
 ## Usage
 
