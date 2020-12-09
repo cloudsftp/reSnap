@@ -48,11 +48,6 @@ while [ $# -gt 0 ]; do
   esac
 done
 
-# technical parameters
-width=1408
-height=1872
-bytes_per_pixel=2
-
 # ssh command
 ssh_host="root@$ip"
 ssh_cmd() {
@@ -65,24 +60,98 @@ if ! ssh_cmd true; then
   exit 1
 fi
 
+rm_version="$(ssh_cmd cat /sys/devices/soc0/machine)"
+
+# technical parameters
+if [ "$rm_version" = "reMarkable 1.0" ]; then
+
+  # calculate how much bytes the window is
+  width=1408
+  height=1872
+  bytes_per_pixel=2
+
+  window_bytes="$((width * height * bytes_per_pixel))"
+
+  # read the first $window_bytes of the framebuffer
+  head_fb0="dd if=/dev/fb0 count=1 bs=$window_bytes 2>/dev/null"
+
+  # pixel format
+  pixel_format="rgb565le"
+
+elif [ "$rm_version" = "reMarkable 2.0" ]; then
+
+  # calculate how much bytes the window is
+  width=1872
+  height=1404
+  bytes_per_pixel=1
+
+  window_bytes="$((width * height * bytes_per_pixel))"
+
+  # find xochitl's process
+  pid="$(ssh_cmd pidof xochitl)"
+
+  # find framebuffer location in memory
+  # it is actually the map allocated _after_ the fb0 mmap
+  read_address="grep -C1 '/dev/fb0' /proc/$pid/maps | tail -n1 | sed 's/-.*$//'"
+  skip_bytes_hex="$(ssh_cmd "$read_address")"
+  skip_bytes="$((0x$skip_bytes_hex + 8))"
+
+  # carve the framebuffer out of the process memory
+  page_size=4096
+  window_start_blocks="$((skip_bytes / page_size))"
+  window_offset="$((skip_bytes % page_size))"
+  window_length_blocks="$((window_bytes / page_size + 1))"
+
+  # find head
+  if ssh_cmd "[ -f /opt/bin/head ]"; then
+    head="/opt/bin/head"
+  elif ssh_cmd "[ -f ~/head ]"; then
+    head="~/head"
+  else
+    echo head not found on $rm_version. Please refer to the README
+    exit 2
+  fi
+
+  # Using dd with bs=1 is too slow, so we first carve out the pages our desired
+  # bytes are located in, and then we trim the resulting data with what we need.
+  head_fb0="dd if=/proc/$pid/mem bs=$page_size skip=$window_start_blocks count=$window_length_blocks 2>/dev/null |
+    tail -c+$window_offset |
+    $head -c $window_bytes"
+
+  # pixel format
+  pixel_format="gray8"
+
+  # rotate by 90 degrees to the right
+  filters="$filters,transpose=2"
+
+else
+
+  echo $rm_version not supported
+  exit 2
+
+fi
+
+
 # compression commands
-compress="\$HOME/lz4"
+if ssh_cmd "[ -f /opt/bin/lz4 ]"; then
+  compress="/opt/bin/lz4"
+elif ssh_cmd "[ -f ~/lz4 ]"; then
+  compress="~/lz4"
+else
+  echo lz4 not found on $rm_version. Please refer to the README
+  exit 2
+fi
+
 decompress="lz4 -d"
 
-# calculate how much bytes the window is
-window_bytes="$((width * height * bytes_per_pixel))"
 
-# read the first $window_bytes of the framebuffer
-head_fb0="dd if=/dev/fb0 count=1 bs=$window_bytes 2>/dev/null"
-
-read_command="$head_fb0 | $compress"
-
-# execute read_command on the reMarkable and encode received data
-ssh_cmd "$read_command" |
+# read and compress the data on the reMarkable
+# decompress and decode the data on this machine
+ssh_cmd "$head_fb0 | $compress" |
   $decompress |
   ffmpeg -y \
     -f rawvideo \
-    -pixel_format rgb565le \
+    -pixel_format $pixel_format \
     -video_size "$width,$height" \
     -i - \
     -vf "$filters" \
