@@ -104,11 +104,11 @@ elif [ "$rm_version" = "reMarkable 2.0" ]; then
 
   # find head
   if ssh_cmd "[ -f ~/head ]"; then
-    head="~/head"
+    head="\$HOME/head"
   elif ssh_cmd "[ -f /opt/bin/head ]"; then
     head="/opt/bin/head"
   else
-    echo head not found on $rm_version. Please refer to the README
+    echo "head not found on $rm_version. Please refer to the README"
     exit 2
   fi
 
@@ -126,7 +126,7 @@ elif [ "$rm_version" = "reMarkable 2.0" ]; then
 
 else
 
-  echo $rm_version not supported
+  echo "$rm_version not supported"
   exit 2
 
 fi
@@ -134,11 +134,11 @@ fi
 
 # compression commands
 if ssh_cmd "[ -f ~/lz4 ]"; then
-  compress="~/lz4"
+  compress="\$HOME/lz4"
 elif ssh_cmd "[ -f /opt/bin/lz4 ]"; then
   compress="/opt/bin/lz4"
 else
-  echo lz4 not found on $rm_version. Please refer to the README
+  echo "lz4 not found on $rm_version. Please refer to the README"
   exit 2
 fi
 
