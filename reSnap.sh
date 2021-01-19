@@ -13,6 +13,9 @@ ip="10.11.99.1"
 output_file="$tmp_dir/snapshot_$(date +%F_%H-%M-%S).png"
 filters="null"
 
+# delete temporary file on exit
+trap "rm -f $output_file" exit
+
 # parsing arguments
 while [ $# -gt 0 ]; do
   case "$1" in
