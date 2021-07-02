@@ -14,7 +14,7 @@ output_file="$tmp_dir/snapshot_$(date +%F_%H-%M-%S).png"
 filters="null"
 
 # delete temporary file on exit
-trap "rm -f $output_file" exit
+trap 'rm -f $output_file' EXIT
 
 # parsing arguments
 while [ $# -gt 0 ]; do
@@ -137,7 +137,7 @@ fi
 # compression commands
 if ssh_cmd "[ -f /opt/bin/lz4 ]"; then
   compress="/opt/bin/lz4"
-if ssh_cmd "[ -f ~/lz4 ]"; then # backwards compatibility
+elif ssh_cmd "[ -f ~/lz4 ]"; then # backwards compatibility
   compress="\$HOME/lz4"
 else
   echo "lz4 not found on $rm_version. Please refer to the README"
