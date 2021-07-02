@@ -24,19 +24,29 @@ reMarkable screenshots over ssh.
 
 ### Installing Programs on your reMarkable
 
-`lz4` and `head` are supplied with this program
-as `l4.arm` and `head.arm`.
+Please use [entware](https://github.com/Evidlo/remarkable_entware) to install `lz4` and `head` on your reMarkable.
 
-Both can be installed with
+Packages:
+- `lz4`
+- `coreutils-head`
+
+Note: before installing the packages, run
 ```
-scp <prgrm>.arm root@10.11.99.1:~/<prgrm>
-ssh root@10.11.99.1 'chmod +x ~/<prgrm>'
+opkg update
+opkg upgrade
+```
+once and the install the packages via
+```
+opkg install <pkg>
 ```
 
 ## Usage
 
 1. Connect your reMarkable via USB
-1. Run ./reSnap.sh
+1. Run
+```
+./reSnap.sh
+```
 
 ### Options
 
@@ -48,4 +58,4 @@ ssh root@10.11.99.1 'chmod +x ~/<prgrm>'
 
 ### Disclaimer
 
-The mojarity of the code is copied from [reStream](https://github.com/rien/reStream). Be sure to check them out!
+The majority of the code is copied from [reStream](https://github.com/rien/reStream). Be sure to check them out!

@@ -106,10 +106,10 @@ elif [ "$rm_version" = "reMarkable 2.0" ]; then
   window_length_blocks="$((window_bytes / page_size + 1))"
 
   # find head
-  if ssh_cmd "[ -f ~/head ]"; then
-    head="\$HOME/head"
-  elif ssh_cmd "[ -f /opt/bin/head ]"; then
+  if ssh_cmd "[ -f /opt/bin/head ]"; then
     head="/opt/bin/head"
+  elif ssh_cmd "[ -f ~/head ]"; then # backwards compatibility
+    head="\$HOME/head"
   else
     echo "head not found on $rm_version. Please refer to the README"
     exit 2
@@ -135,10 +135,10 @@ else
 fi
 
 # compression commands
-if ssh_cmd "[ -f ~/lz4 ]"; then
-  compress="\$HOME/lz4"
-elif ssh_cmd "[ -f /opt/bin/lz4 ]"; then
+if ssh_cmd "[ -f /opt/bin/lz4 ]"; then
   compress="/opt/bin/lz4"
+if ssh_cmd "[ -f ~/lz4 ]"; then # backwards compatibility
+  compress="\$HOME/lz4"
 else
   echo "lz4 not found on $rm_version. Please refer to the README"
   exit 2
