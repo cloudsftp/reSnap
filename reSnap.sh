@@ -1,6 +1,6 @@
 #!/bin/sh
 
-version="2.1"
+version="2.2"
 
 # create temporary directory
 tmp_dir="/tmp/reSnap"
@@ -11,10 +11,8 @@ fi
 # default values
 ip="10.11.99.1"
 output_file="$tmp_dir/snapshot_$(date +%F_%H-%M-%S).png"
+delete_output_file="true"
 filters="null"
-
-# delete temporary file on exit
-trap 'rm -f $output_file' EXIT
 
 # parsing arguments
 while [ $# -gt 0 ]; do
@@ -30,6 +28,7 @@ while [ $# -gt 0 ]; do
     ;;
   -o | --output)
     output_file="$2"
+    delete_output_file="false"
     shift
     shift
     ;;
@@ -50,6 +49,11 @@ while [ $# -gt 0 ]; do
     ;;
   esac
 done
+
+if [ "$delete_output_file" = "true" ]; then
+  # delete temporary file on exit
+  trap 'rm -f $output_file' EXIT
+fi
 
 # ssh command
 ssh_host="root@$ip"
