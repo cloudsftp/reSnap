@@ -94,8 +94,14 @@ elif [ "$rm_version" = "reMarkable 2.0" ]; then
 
   window_bytes="$((width * height * bytes_per_pixel))"
 
-  # find xochitl's process
-  pid="$(ssh_cmd pidof xochitl)"
+  # Find xochitl's process. In case of more than one pids, take the first one which contains /dev/fb0.
+  for n in $(ssh_cmd pidof xochitl); do
+    pid=$n
+    has_fb=$(ssh_cmd "grep -C1 '/dev/fb0' /proc/$pid/maps")
+    if [ "$has_fb" != "" ]; then
+      break
+    fi
+  done
 
   # find framebuffer location in memory
   # it is actually the map allocated _after_ the fb0 mmap
