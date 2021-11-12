@@ -24,7 +24,7 @@ reMarkable screenshots over ssh.
 
 ### Installing Programs on your reMarkable
 
-Please use [entware](https://github.com/Evidlo/remarkable_entware) to install `lz4` and `head` on your reMarkable.
+Please use [toltec](https://github.com/toltec-dev/toltec) to install `lz4` and `head` on your reMarkable.
 
 Packages:
 - `lz4`
