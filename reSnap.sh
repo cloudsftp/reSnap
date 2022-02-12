@@ -14,6 +14,9 @@ output_file="$tmp_dir/snapshot_$(date +%F_%H-%M-%S).png"
 delete_output_file="true"
 filters="null"
 
+# values from environment
+[ -n "$REMARKABLE_IP" ] && ip="$REMARKABLE_IP"
+
 # parsing arguments
 while [ $# -gt 0 ]; do
   case "$1" in
