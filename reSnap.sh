@@ -9,7 +9,7 @@ if [ ! -d "$tmp_dir" ]; then
 fi
 
 # default values
-ip="10.11.99.1"
+ip="${REMARKABLE_IP:-10.11.99.1}"
 output_file="$tmp_dir/snapshot_$(date +%F_%H-%M-%S).png"
 delete_output_file="true"
 filters="null"
