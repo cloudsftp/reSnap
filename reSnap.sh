@@ -159,17 +159,16 @@ else
   exit 2
 fi
 
-lz4="$(command -v lz4)"
-
-decompress="$lz4 -d"
-
-ffmpeg="$(command -v ffmpeg)"
+# don't remove, related to this pr
+# https://github.com/cloudsftp/reSnap/pull/6
+FFMPEG_ABS="$(command -v ffmpeg)"
+LZ4_ABS="$(command -v lz4)"
 
 # read and compress the data on the reMarkable
 # decompress and decode the data on this machine
 ssh_cmd "$head_fb0 | $compress" |
-  $decompress |
-  $ffmpeg -y \
+  "${LZ4_ABS}" -d |
+  "${FFMPEG_ABS}" -y \
     -f rawvideo \
     -pixel_format $pixel_format \
     -video_size "$width,$height" \
