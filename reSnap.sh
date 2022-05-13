@@ -154,13 +154,17 @@ else
   exit 2
 fi
 
-decompress="lz4 -d"
+lz4="$(command -v lz4)"
+
+decompress="$lz4 -d"
+
+ffmpeg="$(command -v ffmpeg)"
 
 # read and compress the data on the reMarkable
 # decompress and decode the data on this machine
 ssh_cmd "$head_fb0 | $compress" |
   $decompress |
-  ffmpeg -y \
+  $ffmpeg -y \
     -f rawvideo \
     -pixel_format $pixel_format \
     -video_size "$width,$height" \
