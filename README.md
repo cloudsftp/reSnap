@@ -53,8 +53,15 @@ opkg install <pkg>
 - `-s --source` You can specify a custom IP. If you want to use reSnap over the Wifi, specify the IP of your reMarkable here.
 - `-o --output` You can specify a custom output file for reSnap.
 - `-l --landscape` Snapshot has now the landscape orientation.
+- `-d --display` Force program to display the snapshot. (overwrites environment variable)
+- `-n --no-display` Force program to not display the snapshot.
 - `-v --version` Displays version.
 - `-h --help` Displays help information.
+
+## Environment Variables
+
+- `REMARKABLE_IP` Default IP of your reMarkable.
+- `RESNAP_DISPLAY` Default behavior of reSnap. See option `-d and -n`.
 
 ### Disclaimer
 
