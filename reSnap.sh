@@ -12,6 +12,7 @@ fi
 ip="${REMARKABLE_IP:-10.11.99.1}"
 output_file="$tmp_dir/snapshot_$(date +%F_%H-%M-%S).png"
 delete_output_file="true"
+display_output_file="${RESNAP_DISPLAY:-true}"
 filters="null"
 
 # parsing arguments
@@ -32,17 +33,27 @@ while [ $# -gt 0 ]; do
     shift
     shift
     ;;
+  -d | --display)
+    display_output_file="true"
+    shift
+    ;;
+  -n | --no-display)
+    display_output_file="false"
+    shift
+    ;;
   -v | --version)
     echo "$0 version $version"
     exit 0
     ;;
   -h | --help | *)
-    echo "Usage: $0 [-l] [-v] [--source <ssh-host>] [--output <output-file>] [-h]"
+    echo "Usage: $0 [-l] [-d] [-n] [-v] [--source <ssh-host>] [--output <output-file>] [-h]"
     echo "Examples:"
     echo "  $0                    # snapshot in portrait"
     echo "  $0 -l                 # snapshot in landscape"
     echo "  $0 -s 192.168.2.104   # snapshot over wifi"
     echo "  $0 -o snapshot.png    # saves the snapshot in the current directory"
+    echo "  $0 -d                 # force display the file (requires feh)"
+    echo "  $0 -n                 # force don't display the file"
     echo "  $0 -v                 # displays version"
     echo "  $0 -h                 # displays help information (this)"
     exit 2
@@ -154,13 +165,16 @@ else
   exit 2
 fi
 
-decompress="lz4 -d"
+# don't remove, related to this pr
+# https://github.com/cloudsftp/reSnap/pull/6
+FFMPEG_ABS="$(command -v ffmpeg)"
+LZ4_ABS="$(command -v lz4)"
 
 # read and compress the data on the reMarkable
 # decompress and decode the data on this machine
 ssh_cmd "$head_fb0 | $compress" |
-  $decompress |
-  ffmpeg -y \
+  "${LZ4_ABS}" -d |
+  "${FFMPEG_ABS}" -y \
     -f rawvideo \
     -pixel_format $pixel_format \
     -video_size "$width,$height" \
@@ -168,5 +182,7 @@ ssh_cmd "$head_fb0 | $compress" |
     -vf "$filters" \
     -frames:v 1 "$output_file"
 
-# show the snapshot
-feh --fullscreen "$output_file"
+if [ "$display_output_file" = "true" ]; then
+  # show the snapshot
+  feh --fullscreen "$output_file"
+fi
