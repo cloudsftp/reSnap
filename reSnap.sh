@@ -126,21 +126,11 @@ elif [ "$rm_version" = "reMarkable 2.0" ]; then
   window_offset="$((skip_bytes % page_size))"
   window_length_blocks="$((window_bytes / page_size + 1))"
 
-  # find head
-  if ssh_cmd "[ -f /opt/bin/head ]"; then
-    head="/opt/bin/head"
-  elif ssh_cmd "[ -f ~/head ]"; then # backwards compatibility
-    head="\$HOME/head"
-  else
-    echo "head not found on $rm_version. Please refer to the README"
-    exit 2
-  fi
-
   # Using dd with bs=1 is too slow, so we first carve out the pages our desired
   # bytes are located in, and then we trim the resulting data with what we need.
   head_fb0="dd if=/proc/$pid/mem bs=$page_size skip=$window_start_blocks count=$window_length_blocks 2>/dev/null |
     tail -c+$window_offset |
-    $head -c $window_bytes"
+    cut -b -$window_bytes"
 
   # pixel format
   pixel_format="gray8"
