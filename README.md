@@ -15,7 +15,6 @@ reMarkable screenshots over ssh.
 
 - The following programs are required on your reMarkable:
   - `lz4`
-  - `head` (only reMarkable 2.0)
 
 - The following programs are required on your computer:
   - `lz4`
@@ -24,11 +23,10 @@ reMarkable screenshots over ssh.
 
 ### Installing Programs on your reMarkable
 
-Please use [toltec](https://github.com/toltec-dev/toltec) to install `lz4` and `head` on your reMarkable.
+Please use [toltec](https://github.com/toltec-dev/toltec) to install `lz4` on your reMarkable.
 
 Packages:
 - `lz4`
-- `coreutils-head`
 
 Note: before installing the packages, run
 ```
