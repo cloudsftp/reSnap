@@ -61,7 +61,7 @@ while [ $# -gt 0 ]; do
   esac
 done
 
-if [ "$delete_output_file" = "true" ]; then
+if [ "$delete_output_file" = "true" ] && [ "$display_output_file" = "true" ]; then
   # delete temporary file on exit
   trap 'rm -f $output_file' EXIT
 fi
