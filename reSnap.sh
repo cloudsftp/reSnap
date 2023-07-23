@@ -157,7 +157,11 @@ if ssh_cmd "[ -f /opt/bin/lz4 ]"; then
 elif ssh_cmd "[ -f ~/lz4 ]"; then # backwards compatibility
   compress="\$HOME/lz4"
 else
-  echo "WARNING: lz4 not found on $rm_version. Please refer to the README"
+  echo
+  echo "WARNING:    lz4 not found on $rm_version."
+  echo "            It is recommended to install it for vastly improved performance."
+  echo "            Please refer to the README"
+  echo
   compress="tee"
   decompress="tee"
 fi

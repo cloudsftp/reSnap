@@ -13,15 +13,15 @@ reMarkable screenshots over ssh.
   [Tutorial](https://remarkablewiki.com/tech/ssh) <br>
   (recommended: SSH-key so you don't have to type in your root password every time)
 
-- The following programs are required on your reMarkable:
-  - `lz4`
-
 - The following programs are required on your computer:
-  - `lz4`
   - `ffmpeg`
   - `feh`
 
-### Installing Programs on your reMarkable
+### Recommended
+
+It is recommended to install `lz4` on both your computer and the reMarkable tablet.
+
+#### Installing Programs on your reMarkable
 
 Please use [toltec](https://github.com/toltec-dev/toltec) to install `lz4` on your reMarkable.
 
@@ -33,10 +33,12 @@ Note: before installing the packages, run
 opkg update
 opkg upgrade
 ```
-once and the install the packages via
+once and then install the packages via
 ```
 opkg install <pkg>
 ```
+
+Remember to run `toltecctl reenable` on your reMarkable tablet after each software update.
 
 ## Usage
 
