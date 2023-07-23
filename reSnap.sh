@@ -145,25 +145,27 @@ else
 
 fi
 
+# don't remove, related to this pr
+# https://github.com/cloudsftp/reSnap/pull/6
+FFMPEG_ABS="$(command -v ffmpeg)"
+LZ4_ABS="$(command -v lz4)"
+decompress="${LZ4_ABS} -d"
+
 # compression commands
 if ssh_cmd "[ -f /opt/bin/lz4 ]"; then
   compress="/opt/bin/lz4"
 elif ssh_cmd "[ -f ~/lz4 ]"; then # backwards compatibility
   compress="\$HOME/lz4"
 else
-  echo "lz4 not found on $rm_version. Please refer to the README"
-  exit 2
+  echo "WARNING: lz4 not found on $rm_version. Please refer to the README"
+  compress="tee"
+  decompress="tee"
 fi
-
-# don't remove, related to this pr
-# https://github.com/cloudsftp/reSnap/pull/6
-FFMPEG_ABS="$(command -v ffmpeg)"
-LZ4_ABS="$(command -v lz4)"
 
 # read and compress the data on the reMarkable
 # decompress and decode the data on this machine
 ssh_cmd "$head_fb0 | $compress" |
-  "${LZ4_ABS}" -d |
+  $decompress |
   "${FFMPEG_ABS}" -y \
     -f rawvideo \
     -pixel_format $pixel_format \
