@@ -13,32 +13,32 @@ reMarkable screenshots over ssh.
   [Tutorial](https://remarkablewiki.com/tech/ssh) <br>
   (recommended: SSH-key so you don't have to type in your root password every time)
 
-- The following programs are required on your reMarkable:
-  - `lz4`
-  - `head` (only reMarkable 2.0)
-
 - The following programs are required on your computer:
-  - `lz4`
   - `ffmpeg`
   - `feh`
 
-### Installing Programs on your reMarkable
+### Recommended
 
-Please use [toltec](https://github.com/toltec-dev/toltec) to install `lz4` and `head` on your reMarkable.
+It is recommended to install `lz4` on both your computer and the reMarkable tablet.
+
+#### Installing Programs on your reMarkable
+
+Please use [toltec](https://github.com/toltec-dev/toltec) to install `lz4` on your reMarkable.
 
 Packages:
 - `lz4`
-- `coreutils-head`
 
 Note: before installing the packages, run
 ```
 opkg update
 opkg upgrade
 ```
-once and the install the packages via
+once and then install the packages via
 ```
 opkg install <pkg>
 ```
+
+Remember to run `toltecctl reenable` on your reMarkable tablet after each software update.
 
 ## Usage
 
@@ -53,8 +53,15 @@ opkg install <pkg>
 - `-s --source` You can specify a custom IP. If you want to use reSnap over the Wifi, specify the IP of your reMarkable here.
 - `-o --output` You can specify a custom output file for reSnap.
 - `-l --landscape` Snapshot has now the landscape orientation.
+- `-d --display` Force program to display the snapshot. (overwrites environment variable)
+- `-n --no-display` Force program to not display the snapshot.
 - `-v --version` Displays version.
 - `-h --help` Displays help information.
+
+## Environment Variables
+
+- `REMARKABLE_IP` Default IP of your reMarkable.
+- `RESNAP_DISPLAY` Default behavior of reSnap. See option `-d and -n`.
 
 ### Disclaimer
 
