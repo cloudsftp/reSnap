@@ -20,6 +20,8 @@ reMarkable screenshots over ssh.
 ### Recommended
 
 It is recommended to install `lz4` on both your computer and the reMarkable tablet.
+But only for versions up to `2.15.1.1189` at the time of writing!
+Check for [the warning here](https://toltec-dev.org/#install-toltec).
 
 #### Installing Programs on your reMarkable
 
