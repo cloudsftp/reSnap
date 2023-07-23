@@ -160,6 +160,7 @@ else
   echo
   echo "WARNING:    lz4 not found on $rm_version."
   echo "            It is recommended to install it for vastly improved performance."
+  echo "            But only for versions up to 2.15.1.1189 at the time of writing."
   echo "            Please refer to the README"
   echo
   compress="tee"
