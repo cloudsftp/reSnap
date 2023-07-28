@@ -13,7 +13,7 @@ ip="${REMARKABLE_IP:-10.11.99.1}"
 output_file="$tmp_dir/snapshot_$(date +%F_%H-%M-%S).png"
 delete_output_file="true"
 display_output_file="${RESNAP_DISPLAY:-true}"
-filters="null"
+filters="curves=all=0.045/0 0.06/1"
 
 # parsing arguments
 while [ $# -gt 0 ]; do
