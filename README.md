@@ -57,13 +57,18 @@ Remember to run `toltecctl reenable` on your reMarkable tablet after each softwa
 - `-l --landscape` Snapshot has now the landscape orientation.
 - `-d --display` Force program to display the snapshot. (overwrites environment variable)
 - `-n --no-display` Force program to not display the snapshot.
+- `-c --og-color` Turn off color correction (color correction is only active for the reMarkable2)
 - `-v --version` Displays version.
 - `-h --help` Displays help information.
 
 ## Environment Variables
 
 - `REMARKABLE_IP` Default IP of your reMarkable.
-- `RESNAP_DISPLAY` Default behavior of reSnap. See option `-d and -n`.
+- `RESNAP_DISPLAY` Default behavior of displaying the snapshot. See options `-d` and `-n`.
+- `RESNAP_COLOR_CORRECTION` Default behavior of color correction on the reMarkable2. See option `-c`.
+
+`RESNAP_DISPLAY` and `RESNAP_COLOR_CORRECTION` are boolean parameters.
+Everything other than `true` is interpreted as `false`!
 
 ### Disclaimer
 

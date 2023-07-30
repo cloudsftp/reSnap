@@ -13,6 +13,7 @@ ip="${REMARKABLE_IP:-10.11.99.1}"
 output_file="$tmp_dir/snapshot_$(date +%F_%H-%M-%S).png"
 delete_output_file="true"
 display_output_file="${RESNAP_DISPLAY:-true}"
+color_correction="${RESNAP_COLOR_CORRECTION:-true}"
 filters="null"
 
 # parsing arguments
@@ -41,6 +42,10 @@ while [ $# -gt 0 ]; do
     display_output_file="false"
     shift
     ;;
+  -c | --og-color)
+    color_correction="false"
+    shift
+    ;;
   -v | --version)
     echo "$0 version $version"
     exit 0
@@ -52,8 +57,9 @@ while [ $# -gt 0 ]; do
     echo "  $0 -l                 # snapshot in landscape"
     echo "  $0 -s 192.168.2.104   # snapshot over wifi"
     echo "  $0 -o snapshot.png    # saves the snapshot in the current directory"
-    echo "  $0 -d                 # force display the file (requires feh)"
-    echo "  $0 -n                 # force don't display the file"
+    echo "  $0 -d                 # display the file"
+    echo "  $0 -n                 # don't display the file"
+    echo "  $0 -c                 # no color correction (reMarkable2)"
     echo "  $0 -v                 # displays version"
     echo "  $0 -h                 # displays help information (this)"
     exit 2
@@ -61,7 +67,11 @@ while [ $# -gt 0 ]; do
   esac
 done
 
-if [ "$delete_output_file" = "true" ] && [ "$display_output_file" = "true" ]; then
+if [ "$display_output_file" != "true" ]; then
+  delete_output_file="false"
+fi
+
+if [ "$delete_output_file" = "true" ]; then
   # delete temporary file on exit
   trap 'rm -f $output_file' EXIT
 fi
@@ -137,6 +147,11 @@ elif [ "$rm_version" = "reMarkable 2.0" ]; then
 
   # rotate by 90 degrees to the right
   filters="$filters,transpose=2"
+
+  # color correction
+  if [ "$color_correction" = "true" ]; then
+    filters="$filters,curves=all=0.045/0 0.06/1"
+  fi
 
 else
 
