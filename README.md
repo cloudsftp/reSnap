@@ -17,30 +17,6 @@ reMarkable screenshots over ssh.
   - `ffmpeg`
   - `feh`
 
-### Recommended
-
-It is recommended to install `lz4` on both your computer and the reMarkable tablet.
-But only for versions up to `2.15.1.1189` at the time of writing!
-Check for [the warning here](https://toltec-dev.org/#install-toltec).
-
-#### Installing Programs on your reMarkable
-
-Please use [toltec](https://github.com/toltec-dev/toltec) to install `lz4` on your reMarkable.
-
-Packages:
-- `lz4`
-
-Note: before installing the packages, run
-```
-opkg update
-opkg upgrade
-```
-once and then install the packages via
-```
-opkg install <pkg>
-```
-
-Remember to run `toltecctl reenable` on your reMarkable tablet after each software update.
 
 ## Usage
 
@@ -61,7 +37,7 @@ Remember to run `toltecctl reenable` on your reMarkable tablet after each softwa
 - `-v --version` Displays version.
 - `-h --help` Displays help information.
 
-## Environment Variables
+### Environment Variables
 
 - `REMARKABLE_IP` Default IP of your reMarkable.
 - `RESNAP_DISPLAY` Default behavior of displaying the snapshot. See options `-d` and `-n`.
@@ -69,6 +45,45 @@ Remember to run `toltecctl reenable` on your reMarkable tablet after each softwa
 
 `RESNAP_DISPLAY` and `RESNAP_COLOR_CORRECTION` are boolean parameters.
 Everything other than `true` is interpreted as `false`!
+
+## Recommended for better performance
+
+It is recommended to install `lz4` on both your computer and the reMarkable tablet.
+
+### Installing Programs on your reMarkable
+
+#### Manually
+
+Copy the provided binary `lz4.arm.static` to your reMarkable and make it executable.
+The binary is version `1.9.2`.
+
+```bash
+scp lz4.arm.static root@$REMARKABLE_IP:/home/root/lz4
+ssh root@$REMARKABLE_IP 'chmod +x /home/root/lz4'
+```
+
+#### Using Toltec
+
+This is only recommended for versions up to `2.15.1.1189` at the time of writing.
+You might brick your reMarkable otherwise!
+Check for [the warning here](https://toltec-dev.org/#install-toltec).
+
+Please use [Toltec](https://github.com/toltec-dev/toltec) to install `lz4` on your reMarkable.
+
+Packages:
+- `lz4`
+
+Note: before installing the packages, run
+```
+opkg update
+opkg upgrade
+```
+once and then install the packages via
+```
+opkg install <pkg>
+```
+
+Remember to run `toltecctl reenable` on your reMarkable tablet after each software update.
 
 ### Disclaimer
 
