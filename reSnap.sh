@@ -46,9 +46,10 @@ while [ $# -gt 0 ]; do
   -c | --og-color)
     color_correction="false"
     shift
-  -p | --og-pixel-format
-    byte="false"
-    col
+    ;;
+  -p | --og-pixel-format)
+    byte_correction="false"
+    shift
     ;;
   -v | --version)
     echo "$0 version $version"
@@ -120,11 +121,11 @@ elif [ "$rm_version" = "reMarkable 2.0" ]; then
   if [ "$byte_correction" = "true" ]; then
     bytes_per_pixel=2
     pixel_format="gray16"
-    filters="$filters,hflip,transpose=1"
+    filters="$filters,transpose=3" # 90° clockwise and vertical flip 
   else
     bytes_per_pixel=1
     pixel_format="gray8"
-    filters="$filters,transpose=2"
+    filters="$filters,transpose=2" # 90° counter-clockwise
   fi
 
   window_bytes="$((width * height * bytes_per_pixel))"
@@ -155,8 +156,6 @@ elif [ "$rm_version" = "reMarkable 2.0" ]; then
   head_fb0="dd if=/proc/$pid/mem bs=$page_size skip=$window_start_blocks count=$window_length_blocks 2>/dev/null |
     tail -c+$window_offset |
     cut -b -$window_bytes"
-
-  # rotate by 90 degrees to the right
 
   # color correction
   if [ "$color_correction" = "true" ]; then
