@@ -16,3 +16,9 @@ jobs:
         uses: luizm/action-sh-checker@v0.3.0
         env:
           SHFMT_OPTS: -i 2
+
+      - name: Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: ncipollo/release-action@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
