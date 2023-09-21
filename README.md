@@ -1,4 +1,4 @@
-# reSnap ![version](https://img.shields.io/badge/RS-2.5-blue)
+# reSnap ![version](https://img.shields.io/badge/version-2.5.1-blue)
 
 reMarkable screenshots over ssh.
 
@@ -35,6 +35,7 @@ reMarkable screenshots over ssh.
 - `-d --display` Force program to display the snapshot. (overwrites environment variable)
 - `-n --no-display` Force program to not display the snapshot.
 - `-c --og-color` Turn off color correction (color correction is only active for the reMarkable2)
+- `-p --og-pixel-format` Turns off the byte correction (use this if your reMarkable is on version < 3.6)
 - `-v --version` Displays version.
 - `-h --help` Displays help information.
 
@@ -43,8 +44,9 @@ reMarkable screenshots over ssh.
 - `REMARKABLE_IP` Default IP of your reMarkable.
 - `RESNAP_DISPLAY` Default behavior of displaying the snapshot. See options `-d` and `-n`.
 - `RESNAP_COLOR_CORRECTION` Default behavior of color correction on the reMarkable2. See option `-c`.
+- `RESNAP_BYTE_CORRECTION` Default behavior of color correction on the reMarkable2 version >= 3.6. See option `-b`.
 
-`RESNAP_DISPLAY` and `RESNAP_COLOR_CORRECTION` are boolean parameters.
+`RESNAP_DISPLAY`, `RESNAP_COLOR_CORRECTION` and `RESNAP_BYTE_CORRECTION` are boolean parameters.
 Everything other than `true` is interpreted as `false`!
 
 ## Recommended for better performance

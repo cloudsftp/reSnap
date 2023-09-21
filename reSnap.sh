@@ -1,6 +1,6 @@
 #!/bin/sh
 
-version="2.5"
+version="v2.5.1"
 
 # create temporary directory
 tmp_dir="/tmp/reSnap"
@@ -14,6 +14,7 @@ output_file="$tmp_dir/snapshot_$(date +%F_%H-%M-%S).png"
 delete_output_file="true"
 display_output_file="${RESNAP_DISPLAY:-true}"
 color_correction="${RESNAP_COLOR_CORRECTION:-true}"
+byte_correction="${RESNAP_BYTE_CORRECTION:-true}"
 filters="null"
 
 # parsing arguments
@@ -46,6 +47,10 @@ while [ $# -gt 0 ]; do
     color_correction="false"
     shift
     ;;
+  -p | --og-pixel-format)
+    byte_correction="false"
+    shift
+    ;;
   -v | --version)
     echo "$0 version $version"
     exit 0
@@ -60,6 +65,7 @@ while [ $# -gt 0 ]; do
     echo "  $0 -d                 # display the file"
     echo "  $0 -n                 # don't display the file"
     echo "  $0 -c                 # no color correction (reMarkable2)"
+    echo "  $0 -p                 # no pixel format correction (reMarkable2 version < 3.6)"
     echo "  $0 -v                 # displays version"
     echo "  $0 -h                 # displays help information (this)"
     exit 2
@@ -111,7 +117,16 @@ elif [ "$rm_version" = "reMarkable 2.0" ]; then
   # calculate how much bytes the window is
   width=1872
   height=1404
-  bytes_per_pixel=1
+  # pixel format
+  if [ "$byte_correction" = "true" ]; then
+    bytes_per_pixel=2
+    pixel_format="gray16"
+    filters="$filters,transpose=3" # 90° clockwise and vertical flip
+  else
+    bytes_per_pixel=1
+    pixel_format="gray8"
+    filters="$filters,transpose=2" # 90° counter-clockwise
+  fi
 
   window_bytes="$((width * height * bytes_per_pixel))"
 
@@ -141,12 +156,6 @@ elif [ "$rm_version" = "reMarkable 2.0" ]; then
   head_fb0="dd if=/proc/$pid/mem bs=$page_size skip=$window_start_blocks count=$window_length_blocks 2>/dev/null |
     tail -c+$window_offset |
     cut -b -$window_bytes"
-
-  # pixel format
-  pixel_format="gray8"
-
-  # rotate by 90 degrees to the right
-  filters="$filters,transpose=2"
 
   # color correction
   if [ "$color_correction" = "true" ]; then
