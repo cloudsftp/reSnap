@@ -46,7 +46,7 @@ while [ $# -gt 0 ]; do
   -c | --og-color)
     color_correction="false"
     shift
-  -b | -og-pixel-format
+  -p | --og-pixel-format
     byte="false"
     col
     ;;
@@ -64,7 +64,7 @@ while [ $# -gt 0 ]; do
     echo "  $0 -d                 # display the file"
     echo "  $0 -n                 # don't display the file"
     echo "  $0 -c                 # no color correction (reMarkable2)"
-    echo "  $0 -b                 # no byte correction (reMarkable2 version < 3.6)"
+    echo "  $0 -p                 # no pixel format correction (reMarkable2 version < 3.6)"
     echo "  $0 -v                 # displays version"
     echo "  $0 -h                 # displays help information (this)"
     exit 2

@@ -35,7 +35,7 @@ reMarkable screenshots over ssh.
 - `-d --display` Force program to display the snapshot. (overwrites environment variable)
 - `-n --no-display` Force program to not display the snapshot.
 - `-c --og-color` Turn off color correction (color correction is only active for the reMarkable2)
-- `-d --og-pixel-format` Turns off the byte correction (use this if your reMarkable is on version < 3.6)
+- `-p --og-pixel-format` Turns off the byte correction (use this if your reMarkable is on version < 3.6)
 - `-v --version` Displays version.
 - `-h --help` Displays help information.
 
