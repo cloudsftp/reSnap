@@ -1,6 +1,6 @@
 #!/bin/sh
 
-version="2.5"
+version="v2.5.1"
 
 # create temporary directory
 tmp_dir="/tmp/reSnap"
@@ -121,7 +121,7 @@ elif [ "$rm_version" = "reMarkable 2.0" ]; then
   if [ "$byte_correction" = "true" ]; then
     bytes_per_pixel=2
     pixel_format="gray16"
-    filters="$filters,transpose=3" # 90° clockwise and vertical flip 
+    filters="$filters,transpose=3" # 90° clockwise and vertical flip
   else
     bytes_per_pixel=1
     pixel_format="gray8"

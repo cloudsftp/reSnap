@@ -1,4 +1,4 @@
-# reSnap ![version](https://img.shields.io/badge/RS-2.5-blue)
+# reSnap ![version](https://img.shields.io/badge/version-2.5.1-blue)
 
 reMarkable screenshots over ssh.
 
