@@ -1,0 +1,6 @@
+[build]
+# Set the default --target flag
+target = "armv7-unknown-linux-gnueabihf"
+
+[target.armv7-unknown-linux-gnueabihf]
+linker = "./arm-gnu-toolchain/bin/arm-none-linux-gnueabihf-gcc"
