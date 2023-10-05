@@ -17,6 +17,7 @@ color_correction="${RESNAP_COLOR_CORRECTION:-true}"
 byte_correction="${RESNAP_BYTE_CORRECTION:-true}"
 filters="null"
 copy_to_clipboard="false"
+construct_sketch="false"
 
 # parsing arguments
 while [ $# -gt 0 ]; do
@@ -48,6 +49,10 @@ while [ $# -gt 0 ]; do
     copy_to_clipboard="true"
     shift
     ;;
+  -f | --sketch)
+    construct_sketch="true"
+    shift
+    ;;
   -c | --og-color)
     color_correction="false"
     shift
@@ -73,6 +78,7 @@ while [ $# -gt 0 ]; do
     echo "  $0 -x                 # Copy snapshot to clipboard also"
     echo "  $0 -p                 # no pixel format correction (reMarkable2 version < 3.6)"
     echo "  $0 -v                 # displays version"
+    echo "  $0 --sketch           # Construct sketc"
     echo "  $0 -h                 # displays help information (this)"
     exit 2
     ;;
@@ -207,6 +213,15 @@ ssh_cmd "$head_fb0 | $compress" |
     -i - \
     -vf "$filters" \
     -frames:v 1 "$output_file"
+
+if [ "$construct_sketch" = "true" ]; then
+  echo "Constructing sketch"
+  magick "${output_file}" -fill white -draw 'rectangle 0,0 100,100' \
+    -fill white -draw "rectangle 0,1870 2,1872" \
+    -transparent white -trim -resize 50% +repage "${output_file}"
+
+  output_file=$(realpath "${output_file}")
+fi
 
 # Copy to clipboard
 if [ "$copy_to_clipboard" = "true" ]; then
