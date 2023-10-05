@@ -66,7 +66,7 @@ while [ $# -gt 0 ]; do
     exit 0
     ;;
   -h | --help | *)
-    echo "Usage: $0 [-l] [-d] [-n] [-v] [-x] [--source <ssh-host>] [--output <output-file>] [-h]"
+    echo "Usage: $0 [-l] [-d] [-n] [-v] [-x] [-f] [--source <ssh-host>] [--output <output-file>] [-h]"
     echo "Examples:"
     echo "  $0                    # snapshot in portrait"
     echo "  $0 -l                 # snapshot in landscape"
@@ -76,6 +76,7 @@ while [ $# -gt 0 ]; do
     echo "  $0 -n                 # don't display the file"
     echo "  $0 -c                 # no color correction (reMarkable2)"
     echo "  $0 -x                 # Copy snapshot to clipboard also"
+    echo "  $0 -f                 # Remove white background"
     echo "  $0 -p                 # no pixel format correction (reMarkable2 version < 3.6)"
     echo "  $0 -v                 # displays version"
     echo "  $0 --sketch           # Construct sketc"

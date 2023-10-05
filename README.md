@@ -36,6 +36,8 @@ reMarkable screenshots over ssh.
 - `-n --no-display` Force program to not display the snapshot.
 - `-c --og-color` Turn off color correction (color correction is only active for the reMarkable2)
 - `-p --og-pixel-format` Turns off the byte correction (use this if your reMarkable is on version < 3.6)
+- `-x --clipboard` Copies the result into the clipboard.
+- `-f --sketch` Removes the white background from the result.
 - `-v --version` Displays version.
 - `-h --help` Displays help information.
 
