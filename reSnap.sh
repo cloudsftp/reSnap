@@ -15,6 +15,7 @@ delete_output_file="true"
 display_output_file="${RESNAP_DISPLAY:-true}"
 color_correction="${RESNAP_COLOR_CORRECTION:-true}"
 byte_correction="${RESNAP_BYTE_CORRECTION:-true}"
+invert_colors="${REMARKABLE_INVERT_COLORS:-false}"
 filters="null"
 copy_to_clipboard="false"
 construct_sketch="false"
@@ -61,6 +62,9 @@ while [ $# -gt 0 ]; do
     byte_correction="false"
     shift
     ;;
+  -i | --invert-colors)
+    invert_colors="true"
+    ;;
   -v | --version)
     echo "$0 version $version"
     exit 0
@@ -80,6 +84,7 @@ while [ $# -gt 0 ]; do
     echo "  $0 -p                 # no pixel format correction (reMarkable2 version < 3.6)"
     echo "  $0 -v                 # displays version"
     echo "  $0 --sketch           # Construct sketc"
+    echo "  $0 -i                 # Invert colors"
     echo "  $0 -h                 # displays help information (this)"
     exit 2
     ;;
@@ -180,6 +185,10 @@ else
   echo "$rm_version not supported"
   exit 2
 
+fi
+
+if [ "$invert_colors" = "true" ]; then
+    filters="$filters,negate"
 fi
 
 # don't remove, related to this pr

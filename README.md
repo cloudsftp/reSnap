@@ -45,6 +45,7 @@ reMarkable screenshots over ssh.
 
 - `REMARKABLE_IP` Default IP of your reMarkable.
 - `RESNAP_DISPLAY` Default behavior of displaying the snapshot. See options `-d` and `-n`.
+- `REMARKABLE_INVERT_COLORS` Default behavior of color inversion. See option `-i`.
 - `RESNAP_COLOR_CORRECTION` Default behavior of color correction on the reMarkable2. See option `-c`.
 - `RESNAP_BYTE_CORRECTION` Default behavior of color correction on the reMarkable2 version >= 3.6. See option `-b`.
 
