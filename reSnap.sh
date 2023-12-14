@@ -188,7 +188,7 @@ else
 fi
 
 if [ "$invert_colors" = "true" ]; then
-    filters="$filters,negate"
+  filters="$filters,negate"
 fi
 
 # don't remove, related to this pr
