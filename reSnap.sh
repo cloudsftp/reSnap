@@ -161,19 +161,12 @@ elif [ "$rm_version" = "reMarkable 2.0" ]; then
   # it is actually the map allocated _after_ the fb0 mmap
   read_address="grep -C1 '/dev/fb0' /proc/$pid/maps | tail -n1 | sed 's/-.*$//'"
   skip_bytes_hex="$(ssh_cmd "$read_address")"
-  skip_bytes="$((0x$skip_bytes_hex + 8))"
+  skip_bytes="$((0x$skip_bytes_hex + 7))"
 
-  # carve the framebuffer out of the process memory
-  page_size=4096
-  window_start_blocks="$((skip_bytes / page_size))"
-  window_offset="$((skip_bytes % page_size))"
-  window_length_blocks="$((window_bytes / page_size + 1))"
-
-  # Using dd with bs=1 is too slow, so we first carve out the pages our desired
+  # remarkable's dd does not have iflag=skip_bytes, so cut the command in two:
+  # one to seek the exact amount and the second to copy in a large chunk
   # bytes are located in, and then we trim the resulting data with what we need.
-  head_fb0="dd if=/proc/$pid/mem bs=$page_size skip=$window_start_blocks count=$window_length_blocks 2>/dev/null |
-    tail -c+$window_offset |
-    cut -b -$window_bytes"
+  head_fb0="{ dd bs=1 skip=$skip_bytes count=0 && dd bs=$window_bytes count=1; } < /proc/$pid/mem 2>/dev/null"
 
   # color correction
   if [ "$color_correction" = "true" ]; then
