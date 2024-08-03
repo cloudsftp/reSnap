@@ -1,6 +1,6 @@
 #!/bin/sh
 
-version="v2.5.1"
+version="v2.5.2"
 
 # create temporary directory
 tmp_dir="/tmp/reSnap"
