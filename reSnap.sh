@@ -11,6 +11,7 @@ fi
 # default values
 ip="${REMARKABLE_IP:-10.11.99.1}"
 output_file="$tmp_dir/snapshot_$(date +%F_%H-%M-%S).png"
+ssh_key_file=""
 delete_output_file="true"
 display_output_file="${RESNAP_DISPLAY:-true}"
 color_correction="${RESNAP_COLOR_CORRECTION:-true}"
@@ -35,6 +36,11 @@ while [ $# -gt 0 ]; do
   -o | --output)
     output_file="$2"
     delete_output_file="false"
+    shift
+    shift
+    ;;
+  -k | --ssh-key-file)
+    ssh_key_file="$2"
     shift
     shift
     ;;
@@ -76,6 +82,7 @@ while [ $# -gt 0 ]; do
     echo "  $0 -l                 # snapshot in landscape"
     echo "  $0 -s 192.168.2.104   # snapshot over wifi"
     echo "  $0 -o snapshot.png    # saves the snapshot in the current directory"
+    echo "  $0 -k '~/.ssh/key'    # force use of a specific ssh key file"
     echo "  $0 -d                 # display the file"
     echo "  $0 -n                 # don't display the file"
     echo "  $0 -c                 # no color correction (reMarkable2)"
@@ -103,7 +110,11 @@ fi
 # ssh command
 ssh_host="root@$ip"
 ssh_cmd() {
-  ssh -o ConnectTimeout=1 "$ssh_host" "$@"
+  if [ -n "$ssh_key_file" ]; then
+    ssh -i "$ssh_key_file" -o ConnectTimeout=1 "$ssh_host" "$@"
+  else
+    ssh -o ConnectTimeout=1 "$ssh_host" "$@"
+  fi
 }
 
 # check if we are able to reach the reMarkable
@@ -236,3 +247,5 @@ if [ "$display_output_file" = "true" ]; then
   # show the snapshot
   feh --fullscreen "$output_file"
 fi
+
+
