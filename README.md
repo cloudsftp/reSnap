@@ -27,6 +27,12 @@ reMarkable screenshots over ssh.
 ./reSnap.sh
 ```
 
+Or, if you have `nix` installed, you can just run
+```
+nix run github:cloudsftp/reSnap
+```
+To automatically get the dependencies and then run the script
+
 ### Options
 
 - `-s --source` You can specify a custom IP. If you want to use reSnap over the Wifi, specify the IP of your reMarkable here.
