@@ -17,6 +17,7 @@ reMarkable screenshots over ssh.
 - The following programs are required on your computer:
   - `ffmpeg`
   - `feh`
+  - `jq`
 
 
 ## Usage

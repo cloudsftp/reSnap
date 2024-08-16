@@ -216,13 +216,14 @@ if [ -d "$output_file" ]; then
 
   notebooks_dir="/home/root/.local/share/remarkable/xochitl"
   notebook_data_file="$(ssh_cmd "ls -t $notebooks_dir" | head -n 1)"
-  notebook_uuid="$(basename $notebook_data_file | cut -d '.' -f 1)"
+  notebook_uuid="$(basename "$notebook_data_file" | cut -d '.' -f 1)"
 
   notebook_metadata_file="$notebooks_dir/${notebook_uuid}.metadata"
   metadata="$(ssh_cmd cat "$notebook_metadata_file")"
-  output_file_name="$(echo $metadata | jq -r '.visibleName')"
+  # TODO: if jq not installed, fallback
+  output_file_name="$(echo "$metadata" | jq -r '.visibleName')"
 
-  output_file="${output_file}/${output_file_name} [$(date "+%F %H:%M:%S")].png"
+  output_file="${output_dir}/${output_file_name} [$(date "+%F %H:%M:%S")].png"
 fi
 
 # read and compress the data on the reMarkable
