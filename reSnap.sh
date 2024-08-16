@@ -37,7 +37,7 @@ while [ $# -gt 0 ]; do
     output_file="."
     shift
     # if next argument is not empty and not an option (TODO: own function?)
-    if [ $# -gt 0 ] && [ $(expr "$1" : "-") -eq 0 ]; then
+    if [ $# -gt 0 ] && [ "$(expr "$1" : "-")" -eq 0 ]; then
       output_file="$1"
       shift
     fi
