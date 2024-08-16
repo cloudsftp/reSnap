@@ -10,7 +10,7 @@ fi
 
 # default values
 ip="${REMARKABLE_IP:-10.11.99.1}"
-output_file="$tmp_dir/reSnap_$(date +%F_%H-%M-%S).png"
+output_file="$tmp_dir"
 delete_output_file="true"
 display_output_file="${RESNAP_DISPLAY:-true}"
 color_correction="${RESNAP_COLOR_CORRECTION:-true}"
@@ -34,7 +34,7 @@ while [ $# -gt 0 ]; do
     ;;
   -o | --output)
     delete_output_file="false"
-    output_file="" # empty means compute from notebook name
+    output_file="."
     shift
     # if next argument is not empty and not an option (TODO: own function?)
     if [ $# -gt 0 ] && [ $(expr "$1" : "-") -eq 0 ]; then
@@ -211,8 +211,9 @@ else
   decompress="tee"
 fi
 
-if [ -z "$output_file" ]; then
-  output_file="test.png"
+if [ -d "$output_file" ]; then
+  output_file="${output_file}/test.png"
+  # reSnap_$(date +%F_%H-%M-%S).png
 fi
 
 # read and compress the data on the reMarkable

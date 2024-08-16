@@ -30,8 +30,8 @@ reMarkable screenshots over ssh.
 ### Options
 
 - `-s --source` You can specify a custom IP. If you want to use reSnap over the Wifi, specify the IP of your reMarkable here.
-- `-o --output` You can specify a custom output file for reSnap. [Future: If the argument is a directory, the file name is automatically generated from the notebook name]
-- `-o` The output file name is automatically generated from the notebook name and placed in the current directory.
+- `-o --output` You can specify a custom output file for reSnap. If the argument is a directory, the file name is automatically generated from the notebook name.
+- `-o` The current directory is used as the implicit argument of the option above.
 - `-l --landscape` Snapshot has now the landscape orientation.
 - `-d --display` Force program to display the snapshot. (overwrites environment variable)
 - `-n --no-display` Force program to not display the snapshot.
