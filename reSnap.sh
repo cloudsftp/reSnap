@@ -212,8 +212,18 @@ else
 fi
 
 if [ -d "$output_file" ]; then
-  output_file="${output_file}/test.png"
-  # reSnap_$(date +%F_%H-%M-%S).png
+  output_dir="$output_file"
+
+  notebooks_dir="/home/root/.local/share/remarkable/xochitl"
+  notebook_data_file="$(ssh_cmd "ls -t $notebooks_dir" | head -n 1)"
+  notebook_uuid="$(basename $notebook_data_file | cut -d '.' -f 1)"
+
+  notebook_metadata_file="$notebooks_dir/${notebook_uuid}.metadata"
+  metadata="$(ssh_cmd "$notebook_metadata_file")"
+  output_file_name="$(echo $metadata | jq)"
+  exit 1
+
+  output_file="${output_file}/${output_file_name} $(date +%F_%H-%M-%S).png"
 fi
 
 # read and compress the data on the reMarkable
