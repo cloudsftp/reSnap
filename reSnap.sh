@@ -219,11 +219,10 @@ if [ -d "$output_file" ]; then
   notebook_uuid="$(basename $notebook_data_file | cut -d '.' -f 1)"
 
   notebook_metadata_file="$notebooks_dir/${notebook_uuid}.metadata"
-  metadata="$(ssh_cmd "$notebook_metadata_file")"
-  output_file_name="$(echo $metadata | jq)"
-  exit 1
+  metadata="$(ssh_cmd cat "$notebook_metadata_file")"
+  output_file_name="$(echo $metadata | jq -r '.visibleName')"
 
-  output_file="${output_file}/${output_file_name} $(date +%F_%H-%M-%S).png"
+  output_file="${output_file}/${output_file_name} [$(date "+%F %H:%M:%S")].png"
 fi
 
 # read and compress the data on the reMarkable
