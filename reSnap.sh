@@ -10,7 +10,7 @@ fi
 
 # default values
 ip="${REMARKABLE_IP:-10.11.99.1}"
-output_file="$tmp_dir/snapshot_$(date +%F_%H-%M-%S).png"
+output_file="$tmp_dir/reSnap_$(date +%F_%H-%M-%S).png"
 delete_output_file="true"
 display_output_file="${RESNAP_DISPLAY:-true}"
 color_correction="${RESNAP_COLOR_CORRECTION:-true}"
@@ -33,9 +33,14 @@ while [ $# -gt 0 ]; do
     shift
     ;;
   -o | --output)
-    output_file="$2"
     delete_output_file="false"
-    shift
+    if [ $# -gt 1 ] && ! [[ "$2" =~ "-" ]]; then
+      echo here
+      output_file="$2"
+      shift
+    else
+      output_file="" # empty means compute from notebook name
+    fi
     shift
     ;;
   -d | --display)
@@ -76,6 +81,7 @@ while [ $# -gt 0 ]; do
     echo "  $0 -l                 # snapshot in landscape"
     echo "  $0 -s 192.168.2.104   # snapshot over wifi"
     echo "  $0 -o snapshot.png    # saves the snapshot in the current directory"
+    echo "  $0 -o                 # same as above, but named after the notebook"
     echo "  $0 -d                 # display the file"
     echo "  $0 -n                 # don't display the file"
     echo "  $0 -c                 # no color correction (reMarkable2)"
