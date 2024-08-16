@@ -34,14 +34,13 @@ while [ $# -gt 0 ]; do
     ;;
   -o | --output)
     delete_output_file="false"
-    if [ $# -gt 1 ] && ! [[ "$2" =~ "-" ]]; then
-      echo here
-      output_file="$2"
-      shift
-    else
-      output_file="" # empty means compute from notebook name
-    fi
+    output_file="" # empty means compute from notebook name
     shift
+    # if next argument is not empty and not an option (TODO: own function?)
+    if [ $# -gt 0 ] && [ $(expr "$1" : "-") -eq 0 ]; then
+      output_file="$1"
+      shift
+    fi
     ;;
   -d | --display)
     display_output_file="true"
@@ -69,6 +68,7 @@ while [ $# -gt 0 ]; do
     ;;
   -i | --invert-colors)
     invert_colors="true"
+    shift
     ;;
   -v | --version)
     echo "$0 version $version"
@@ -211,6 +211,10 @@ else
   decompress="tee"
 fi
 
+if [ -z "$output_file" ]; then
+  output_file="test.png"
+fi
+
 # read and compress the data on the reMarkable
 # decompress and decode the data on this machine
 ssh_cmd "$head_fb0 | $compress" |
@@ -236,9 +240,10 @@ fi
 if [ "$copy_to_clipboard" = "true" ]; then
   echo "Copying to clipboard"
   xclip -selection clipboard -t image/png -i "${output_file}"
+  # TODO: add support for wayland (wl-copy)
 fi
 
+# Show the snapshot
 if [ "$display_output_file" = "true" ]; then
-  # show the snapshot
   feh --fullscreen "$output_file"
 fi
