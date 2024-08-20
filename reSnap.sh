@@ -219,7 +219,7 @@ notebook_id="$(basename "$notebook_data_file" | cut -d '.' -f 1)"
 notebook_metadata_file="$notebooks_dir/${notebook_id}.metadata"
 metadata="$(ssh_cmd cat "$notebook_metadata_file")"
 
-echo $metadata | jq "{ id: \"$notebook_id\", metadata: $metadata }"
+echo "$metadata" | jq "{ id: \"$notebook_id\", metadata: $metadata }"
 
 if [ -d "$output_file" ]; then
   output_dir="$output_file"
