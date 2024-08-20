@@ -211,15 +211,19 @@ else
   decompress="tee"
 fi
 
+# Get notebook metadata
+notebooks_dir="/home/root/.local/share/remarkable/xochitl"
+notebook_data_file="$(ssh_cmd "ls -u $notebooks_dir" | head -n 1)"
+notebook_id="$(basename "$notebook_data_file" | cut -d '.' -f 1)"
+
+notebook_metadata_file="$notebooks_dir/${notebook_id}.metadata"
+metadata="$(ssh_cmd cat "$notebook_metadata_file")"
+
+echo $metadata | jq "{ id: \"$notebook_id\", metadata: $metadata }"
+
 if [ -d "$output_file" ]; then
   output_dir="$output_file"
 
-  notebooks_dir="/home/root/.local/share/remarkable/xochitl"
-  notebook_data_file="$(ssh_cmd "ls -t $notebooks_dir" | head -n 1)"
-  notebook_uuid="$(basename "$notebook_data_file" | cut -d '.' -f 1)"
-
-  notebook_metadata_file="$notebooks_dir/${notebook_uuid}.metadata"
-  metadata="$(ssh_cmd cat "$notebook_metadata_file")"
   # TODO: if jq not installed, fallback
   output_file_name="$(echo "$metadata" | jq -r '.visibleName')"
 
