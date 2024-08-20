@@ -10,7 +10,7 @@ fi
 
 # default values
 ip="${REMARKABLE_IP:-10.11.99.1}"
-output_file="$tmp_dir/snapshot_$(date +%F_%H-%M-%S).png"
+output_file="$tmp_dir"
 delete_output_file="true"
 display_output_file="${RESNAP_DISPLAY:-true}"
 color_correction="${RESNAP_COLOR_CORRECTION:-true}"
@@ -33,10 +33,14 @@ while [ $# -gt 0 ]; do
     shift
     ;;
   -o | --output)
-    output_file="$2"
     delete_output_file="false"
+    output_file="."
     shift
-    shift
+    # if next argument is not empty and not an option (TODO: own function?)
+    if [ $# -gt 0 ] && [ "$(expr "$1" : "-")" -eq 0 ]; then
+      output_file="$1"
+      shift
+    fi
     ;;
   -d | --display)
     display_output_file="true"
@@ -64,6 +68,7 @@ while [ $# -gt 0 ]; do
     ;;
   -i | --invert-colors)
     invert_colors="true"
+    shift
     ;;
   -v | --version)
     echo "$0 version $version"
@@ -76,6 +81,7 @@ while [ $# -gt 0 ]; do
     echo "  $0 -l                 # snapshot in landscape"
     echo "  $0 -s 192.168.2.104   # snapshot over wifi"
     echo "  $0 -o snapshot.png    # saves the snapshot in the current directory"
+    echo "  $0 -o                 # same as above, but named after the notebook"
     echo "  $0 -d                 # display the file"
     echo "  $0 -n                 # don't display the file"
     echo "  $0 -c                 # no color correction (reMarkable2)"
@@ -205,6 +211,25 @@ else
   decompress="tee"
 fi
 
+# Get notebook metadata
+notebooks_dir="/home/root/.local/share/remarkable/xochitl"
+notebook_data_file="$(ssh_cmd "ls -u $notebooks_dir" | head -n 1)"
+notebook_id="$(basename "$notebook_data_file" | cut -d '.' -f 1)"
+
+notebook_metadata_file="$notebooks_dir/${notebook_id}.metadata"
+metadata="$(ssh_cmd cat "$notebook_metadata_file")"
+
+echo "$metadata" | jq "{ id: \"$notebook_id\", metadata: $metadata }"
+
+if [ -d "$output_file" ]; then
+  output_dir="$output_file"
+
+  # TODO: if jq not installed, fallback
+  output_file_name="$(echo "$metadata" | jq -r '.visibleName')"
+
+  output_file="${output_dir}/${output_file_name} [$(date "+%F %H:%M:%S")].png"
+fi
+
 # read and compress the data on the reMarkable
 # decompress and decode the data on this machine
 ssh_cmd "$head_fb0 | $compress" |
@@ -230,9 +255,10 @@ fi
 if [ "$copy_to_clipboard" = "true" ]; then
   echo "Copying to clipboard"
   xclip -selection clipboard -t image/png -i "${output_file}"
+  # TODO: add support for wayland (wl-copy)
 fi
 
+# Show the snapshot
 if [ "$display_output_file" = "true" ]; then
-  # show the snapshot
   feh --fullscreen "$output_file"
 fi
