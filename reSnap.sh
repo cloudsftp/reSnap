@@ -175,6 +175,10 @@ elif [ "$rm_version" = "reMarkable 2.0" ]; then
 
 else
 
+  if [ "$rm_version" = "reMarkable Ferrari" ]; then
+    rm_version="reMarkable Paper Pro"
+  fi
+
   echo "$rm_version not supported"
   exit 2
 

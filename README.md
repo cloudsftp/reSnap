@@ -2,9 +2,9 @@
 
 reMarkable screenshots over ssh.
 
-[![rm1](https://img.shields.io/badge/rM1-supported-green)](https://remarkable.com/store/remarkable)
-[![rm2](https://img.shields.io/badge/rM2-supported-green)](https://remarkable.com/store/remarkable-2)
-[![rm3](https://img.shields.io/badge/rM3-unsupported-red)](https://remarkable.com/store/remarkable-3)
+[![rm1](https://img.shields.io/badge/reMarkable_1-supported-green)](https://remarkable.com/store/remarkable)
+[![rm2](https://img.shields.io/badge/reMarkable_2-supported-green)](https://remarkable.com/store/remarkable-2)
+[![rm3](https://img.shields.io/badge/reMarkable_Paper_Pro-unsupported-red)](https://remarkable.com/store/remarkable-paper/pro)
 
 ![a demo of reSnap](misc/demo.gif)
 
