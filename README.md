@@ -71,29 +71,6 @@ ssh root@$REMARKABLE_IP 'chmod +x /home/root/lz4'
 
 Where `<version>` is either `1.9.2` or `1.10.0`.
 
-#### Using Toltec
-
-This is only recommended for versions up to `2.15.1.1189` at the time of writing.
-You might brick your reMarkable otherwise!
-Check for [the warning here](https://toltec-dev.org/#install-toltec).
-
-Please use [Toltec](https://github.com/toltec-dev/toltec) to install `lz4` on your reMarkable.
-
-Packages:
-- `lz4`
-
-Note: before installing the packages, run
-```
-opkg update
-opkg upgrade
-```
-once and then install the packages via
-```
-opkg install <pkg>
-```
-
-Remember to run `toltecctl reenable` on your reMarkable tablet after each software update.
-
 ### Disclaimer
 
 The majority of the code is copied from [reStream](https://github.com/rien/reStream). Be sure to check them out!
