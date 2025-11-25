@@ -60,13 +60,16 @@ It is recommended to install `lz4` on both your computer and the reMarkable tabl
 
 #### Manually
 
-Copy the provided binary `lz4.arm.static` to your reMarkable and make it executable.
-The binary is version `1.9.2`.
+Copy one of the provided `lz4` binaries to your reMarkable and make it executable.
+The version you want to install depends on the version on your operating system.
+Check the installed version with `lz4 --version`.
 
 ```bash
-scp lz4.arm.static root@$REMARKABLE_IP:/home/root/lz4
+scp bin/lz4-<version>.arm.static root@$REMARKABLE_IP:/home/root/lz4
 ssh root@$REMARKABLE_IP 'chmod +x /home/root/lz4'
 ```
+
+Where `<version>` is either `1.9.2` or `1.10.0`.
 
 #### Using Toltec
 
