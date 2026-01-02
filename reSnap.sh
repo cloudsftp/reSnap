@@ -188,11 +188,17 @@ if [ "$invert_colors" = "true" ]; then
   filters="$filters,negate"
 fi
 
-# don't remove, related to this pr
-# https://github.com/cloudsftp/reSnap/pull/6
-FFMPEG_ABS="$(command -v ffmpeg)"
-LZ4_ABS="$(command -v lz4)"
-decompress="${LZ4_ABS} -d"
+ffmpeg_abs="$(command -v ffmpeg)"
+if [ -z "$ffmpeg_abs" ]; then
+  echo "ERROR:    could not find command ffmpeg on computer. please install"
+  exit 1
+fi
+lz4_abs="$(command -v lz4)"
+if [ -z "$lz4_abs" ]; then
+  echo "ERROR:    could not find command lz4 on computer. please install"
+  exit 1
+fi
+decompress="${lz4_abs} -d"
 
 # compression commands
 if ssh_cmd "[ -f /opt/bin/lz4 ]"; then
@@ -213,7 +219,7 @@ fi
 # decompress and decode the data on this machine
 ssh_cmd "$head_fb0 | $compress" |
   $decompress |
-  "${FFMPEG_ABS}" -y \
+  "${ffmpeg_abs}" -y \
     -f rawvideo \
     -pixel_format $pixel_format \
     -video_size "$width,$height" \
