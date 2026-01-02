@@ -142,7 +142,7 @@ elif [ "$rm_version" = "reMarkable 2.0" ]; then
   height=1404
 
   # pixel format
-  if [ "$fw_major" -gt 3 ] || ([ "$fw_major" -eq 3 ] && [ "$fw_minor" -ge 24 ]); then
+  if [ "$fw_major" -gt 3 ] || { [ "$fw_major" -eq 3 ] && [ "$fw_minor" -ge 24 ]; }; then
     # Firmware 3.24+ uses ABGR32 format
     bytes_per_pixel=4
     pixel_format="bgra"
@@ -191,7 +191,7 @@ elif [ "$rm_version" = "reMarkable 2.0" ]; then
   # it is actually the map allocated _after_ the fb0 mmap
   read_address="grep -C1 '/dev/fb0' /proc/$pid/maps | tail -n1 | sed 's/-.*$//'"
   skip_bytes_hex="$(ssh_cmd "$read_address")"
-  skip_bytes="$((0x$skip_bytes_hex + $skip_offset))"
+  skip_bytes="$((0x$skip_bytes_hex + skip_offset))"
 
   # remarkable's dd does not have iflag=skip_bytes, so cut the command in two:
   # one to seek the exact amount and the second to copy in a large chunk
