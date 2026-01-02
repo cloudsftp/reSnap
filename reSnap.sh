@@ -1,6 +1,6 @@
 #!/bin/sh
 
-version="v2.5.2"
+version="v2.5.3"
 
 # create temporary directory
 tmp_dir="/tmp/reSnap"
@@ -64,6 +64,7 @@ while [ $# -gt 0 ]; do
     ;;
   -i | --invert-colors)
     invert_colors="true"
+    shift
     ;;
   -v | --version)
     echo "$0 version $version"
@@ -78,12 +79,12 @@ while [ $# -gt 0 ]; do
     echo "  $0 -o snapshot.png    # saves the snapshot in the current directory"
     echo "  $0 -d                 # display the file"
     echo "  $0 -n                 # don't display the file"
-    echo "  $0 -c                 # no color correction (reMarkable2)"
+    echo "  $0 -c                 # no color correction (reMarkable2) - enables highlighter on 3.24+"
     echo "  $0 -x                 # Copy snapshot to clipboard also"
     echo "  $0 -f                 # Remove white background"
     echo "  $0 -p                 # no pixel format correction (reMarkable2 version < 3.6)"
     echo "  $0 -v                 # displays version"
-    echo "  $0 --sketch           # Construct sketc"
+    echo "  $0 --sketch           # Construct sketch"
     echo "  $0 -i                 # Invert colors"
     echo "  $0 -h                 # displays help information (this)"
     exit 2
@@ -132,18 +133,47 @@ if [ "$rm_version" = "reMarkable 1.0" ]; then
 
 elif [ "$rm_version" = "reMarkable 2.0" ]; then
 
+  fw_version="$(ssh_cmd grep 'VERSION_ID' /etc/os-release | cut -d '=' -f2 | tr -d '\"')"
+  fw_major=$(echo "$fw_version" | cut -d '.' -f1)
+  fw_minor=$(echo "$fw_version" | cut -d '.' -f2)
+
   # calculate how much bytes the window is
   width=1872
   height=1404
+
   # pixel format
-  if [ "$byte_correction" = "true" ]; then
-    bytes_per_pixel=2
-    pixel_format="gray16"
-    filters="$filters,transpose=3" # 90° clockwise and vertical flip
+  if [ "$fw_major" -gt 3 ] || ([ "$fw_major" -eq 3 ] && [ "$fw_minor" -ge 24 ]); then
+    # Firmware 3.24+ uses ABGR32 format
+    bytes_per_pixel=4
+    pixel_format="bgra"
+
+    # Framebuffer is stored rotated, swap dimensions
+    fb_width=$width
+    fb_height=$height
+    width=$fb_height
+    height=$fb_width
+
+    # Offset the beginning of mmap memory by
+    # 468 full lines and 336 pixels
+    # (468 * 1404 + 336) * 4 = 2629636
+    # Not yet known why. Discovered by davisremmel and showed in
+    # https://github.com/owulveryck/goMarkableStream/issues/140
+    skip_offset=2629632
+
+    # No transpose is needed, as dimensions are already correct
+
   else
-    bytes_per_pixel=1
-    pixel_format="gray8"
-    filters="$filters,transpose=2" # 90° counter-clockwise
+    # Firmware < 3.24 uses gray8/16 format
+    if [ "$byte_correction" = "true" ]; then
+      bytes_per_pixel=2
+      pixel_format="gray16"
+      filters="$filters,transpose=3" # 90° clockwise and vertical flip
+    else
+      bytes_per_pixel=1
+      pixel_format="gray8"
+      filters="$filters,transpose=2" # 90° counter-clockwise
+    fi
+    skip_offset=7
   fi
 
   window_bytes="$((width * height * bytes_per_pixel))"
@@ -161,7 +191,7 @@ elif [ "$rm_version" = "reMarkable 2.0" ]; then
   # it is actually the map allocated _after_ the fb0 mmap
   read_address="grep -C1 '/dev/fb0' /proc/$pid/maps | tail -n1 | sed 's/-.*$//'"
   skip_bytes_hex="$(ssh_cmd "$read_address")"
-  skip_bytes="$((0x$skip_bytes_hex + 7))"
+  skip_bytes="$((0x$skip_bytes_hex + $skip_offset))"
 
   # remarkable's dd does not have iflag=skip_bytes, so cut the command in two:
   # one to seek the exact amount and the second to copy in a large chunk
