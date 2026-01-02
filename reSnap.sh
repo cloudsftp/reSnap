@@ -147,21 +147,18 @@ elif [ "$rm_version" = "reMarkable 2.0" ]; then
     bytes_per_pixel=4
     pixel_format="bgra"
 
-    # Framebuffer is stored rotated, swap dimensions
-    fb_width=$width
-    fb_height=$height
-    width=$fb_height
-    height=$fb_width
-
     # Offset the beginning of mmap memory by
     # 468 full lines and 336 pixels
     # (468 * 1404 + 336) * 4 = 2629636
-    # Not yet known why. Discovered by davisremmel and showed in
+    # Discovered by davisremmel and showed in
     # https://github.com/owulveryck/goMarkableStream/issues/140
     skip_offset=2629632
 
     # No transpose is needed, as dimensions are already correct
-
+    # But swap dimensions
+    tmp=$height
+    height=$width
+    width=$tmp
   else
     # Firmware < 3.24 uses gray8/16 format
     if [ "$byte_correction" = "true" ]; then
@@ -173,7 +170,13 @@ elif [ "$rm_version" = "reMarkable 2.0" ]; then
       pixel_format="gray8"
       filters="$filters,transpose=2" # 90° counter-clockwise
     fi
+
     skip_offset=7
+
+    # color correction
+    if [ "$color_correction" = "true" ]; then
+      filters="$filters,curves=all=0.045/0 0.06/1"
+    fi
   fi
 
   window_bytes="$((width * height * bytes_per_pixel))"
@@ -197,11 +200,6 @@ elif [ "$rm_version" = "reMarkable 2.0" ]; then
   # one to seek the exact amount and the second to copy in a large chunk
   # bytes are located in, and then we trim the resulting data with what we need.
   head_fb0="{ dd bs=1 skip=$skip_bytes count=0 && dd bs=$window_bytes count=1; } < /proc/$pid/mem 2>/dev/null"
-
-  # color correction
-  if [ "$color_correction" = "true" ]; then
-    filters="$filters,curves=all=0.045/0 0.06/1"
-  fi
 
 else
 
