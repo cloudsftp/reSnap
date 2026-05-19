@@ -5,7 +5,7 @@ version="v2.5.3"
 # create temporary directory
 tmp_dir="/tmp/reSnap"
 if [ ! -d "$tmp_dir" ]; then
-  mkdir "$tmp_dir"
+    mkdir "$tmp_dir"
 fi
 
 # default values
@@ -22,95 +22,95 @@ construct_sketch="false"
 
 # parsing arguments
 while [ $# -gt 0 ]; do
-  case "$1" in
-  -l | --landscape)
-    filters="$filters,transpose=1"
-    shift
-    ;;
-  -s | --source)
-    ip="$2"
-    shift
-    shift
-    ;;
-  -o | --output)
-    output_file="$2"
-    delete_output_file="false"
-    shift
-    shift
-    ;;
-  -d | --display)
-    display_output_file="true"
-    shift
-    ;;
-  -n | --no-display)
-    display_output_file="false"
-    shift
-    ;;
-  -x | --clipboard)
-    copy_to_clipboard="true"
-    shift
-    ;;
-  -f | --sketch)
-    construct_sketch="true"
-    shift
-    ;;
-  -c | --og-color)
-    color_correction="false"
-    shift
-    ;;
-  -p | --og-pixel-format)
-    byte_correction="false"
-    shift
-    ;;
-  -i | --invert-colors)
-    invert_colors="true"
-    shift
-    ;;
-  -v | --version)
-    echo "$0 version $version"
-    exit 0
-    ;;
-  -h | --help | *)
-    echo "Usage: $0 [-l] [-d] [-n] [-v] [-x] [-f] [--source <ssh-host>] [--output <output-file>] [-h]"
-    echo "Examples:"
-    echo "  $0                    # snapshot in portrait"
-    echo "  $0 -l                 # snapshot in landscape"
-    echo "  $0 -s 192.168.2.104   # snapshot over wifi"
-    echo "  $0 -o snapshot.png    # saves the snapshot in the current directory"
-    echo "  $0 -d                 # display the file"
-    echo "  $0 -n                 # don't display the file"
-    echo "  $0 -c                 # no color correction (reMarkable2) - enables highlighter on 3.24+"
-    echo "  $0 -x                 # Copy snapshot to clipboard also"
-    echo "  $0 -f                 # Remove white background"
-    echo "  $0 -p                 # no pixel format correction (reMarkable2 version < 3.6)"
-    echo "  $0 -v                 # displays version"
-    echo "  $0 --sketch           # Construct sketch"
-    echo "  $0 -i                 # Invert colors"
-    echo "  $0 -h                 # displays help information (this)"
-    exit 2
-    ;;
-  esac
+    case "$1" in
+    -l | --landscape)
+        filters="$filters,transpose=1"
+        shift
+        ;;
+    -s | --source)
+        ip="$2"
+        shift
+        shift
+        ;;
+    -o | --output)
+        output_file="$2"
+        delete_output_file="false"
+        shift
+        shift
+        ;;
+    -d | --display)
+        display_output_file="true"
+        shift
+        ;;
+    -n | --no-display)
+        display_output_file="false"
+        shift
+        ;;
+    -x | --clipboard)
+        copy_to_clipboard="true"
+        shift
+        ;;
+    -f | --sketch)
+        construct_sketch="true"
+        shift
+        ;;
+    -c | --og-color)
+        color_correction="false"
+        shift
+        ;;
+    -p | --og-pixel-format)
+        byte_correction="false"
+        shift
+        ;;
+    -i | --invert-colors)
+        invert_colors="true"
+        shift
+        ;;
+    -v | --version)
+        echo "$0 version $version"
+        exit 0
+        ;;
+    -h | --help | *)
+        echo "Usage: $0 [-l] [-d] [-n] [-v] [-x] [-f] [--source <ssh-host>] [--output <output-file>] [-h]"
+        echo "Examples:"
+        echo "  $0                    # snapshot in portrait"
+        echo "  $0 -l                 # snapshot in landscape"
+        echo "  $0 -s 192.168.2.104   # snapshot over wifi"
+        echo "  $0 -o snapshot.png    # saves the snapshot in the current directory"
+        echo "  $0 -d                 # display the file"
+        echo "  $0 -n                 # don't display the file"
+        echo "  $0 -c                 # no color correction (reMarkable2) - enables highlighter on 3.24+"
+        echo "  $0 -x                 # Copy snapshot to clipboard also"
+        echo "  $0 -f                 # Remove white background"
+        echo "  $0 -p                 # no pixel format correction (reMarkable2 version < 3.6)"
+        echo "  $0 -v                 # displays version"
+        echo "  $0 --sketch           # Construct sketch"
+        echo "  $0 -i                 # Invert colors"
+        echo "  $0 -h                 # displays help information (this)"
+        exit 2
+        ;;
+    esac
 done
 
 if [ "$display_output_file" != "true" ]; then
-  delete_output_file="false"
+    delete_output_file="false"
 fi
 
 if [ "$delete_output_file" = "true" ]; then
-  # delete temporary file on exit
-  trap 'rm -f $output_file' EXIT
+    # delete temporary file on exit
+    trap 'rm -f $output_file' EXIT
 fi
 
 # ssh command
 ssh_host="root@$ip"
 ssh_cmd() {
-  ssh -o ConnectTimeout=1 "$ssh_host" "$@"
+    ssh -o ConnectTimeout=1 "$ssh_host" "$@"
 }
 
 # check if we are able to reach the reMarkable
 if ! ssh_cmd true; then
-  echo "$ssh_host unreachable"
-  exit 1
+    echo "$ssh_host unreachable"
+    exit 1
 fi
 
 rm_version="$(ssh_cmd cat /sys/devices/soc0/machine)"
@@ -118,159 +118,160 @@ rm_version="$(ssh_cmd cat /sys/devices/soc0/machine)"
 # technical parameters
 if [ "$rm_version" = "reMarkable 1.0" ]; then
 
-  # calculate how much bytes the window is
-  width=1408
-  height=1872
-  bytes_per_pixel=2
+    # calculate how much bytes the window is
+    width=1408
+    height=1872
+    bytes_per_pixel=2
 
-  window_bytes="$((width * height * bytes_per_pixel))"
+    window_bytes="$((width * height * bytes_per_pixel))"
 
-  # read the first $window_bytes of the framebuffer
-  head_fb0="dd if=/dev/fb0 count=1 bs=$window_bytes 2>/dev/null"
+    # read the first $window_bytes of the framebuffer
+    head_fb0="dd if=/dev/fb0 count=1 bs=$window_bytes 2>/dev/null"
 
-  # pixel format
-  pixel_format="rgb565le"
+    # pixel format
+    pixel_format="rgb565le"
 
 elif [ "$rm_version" = "reMarkable 2.0" ]; then
 
-  fw_version="$(ssh_cmd grep 'VERSION_ID' /etc/os-release | cut -d '=' -f2 | tr -d '\"')"
-  fw_major=$(echo "$fw_version" | cut -d '.' -f1)
-  fw_minor=$(echo "$fw_version" | cut -d '.' -f2)
+    fw_version="$(ssh_cmd grep 'VERSION_ID' /etc/os-release | cut -d '=' -f2 | tr -d '\"')"
+    fw_major=$(echo "$fw_version" | cut -d '.' -f1)
+    fw_minor=$(echo "$fw_version" | cut -d '.' -f2)
 
-  # calculate how much bytes the window is
-  width=1872
-  height=1404
+    # calculate how much bytes the window is
+    width=1872
 
-  # pixel format
-  if [ "$fw_major" -gt 3 ] || { [ "$fw_major" -eq 3 ] && [ "$fw_minor" -ge 24 ]; }; then
-    # Firmware 3.24+ uses ABGR32 format
-    bytes_per_pixel=4
-    pixel_format="bgra"
+    height=1404
 
-    # Offset the beginning of mmap memory by
-    # 468 full lines and 336 pixels
-    # (468 * 1404 + 336) * 4 = 2629636
-    # Discovered by davisremmel and showed in
-    # https://github.com/owulveryck/goMarkableStream/issues/140
-    skip_offset=2629632
+    # pixel format
+    if [ "$fw_major" -gt 3 ] || { [ "$fw_major" -eq 3 ] && [ "$fw_minor" -ge 24 ]; }; then
+        # Firmware 3.24+ uses ABGR32 format
+        bytes_per_pixel=4
+        pixel_format="bgra"
 
-    # No transpose is needed, as dimensions are already correct
-    # But swap dimensions
-    tmp=$height
-    height=$width
-    width=$tmp
-  else
-    # Firmware < 3.24 uses gray8/16 format
-    if [ "$byte_correction" = "true" ]; then
-      bytes_per_pixel=2
-      pixel_format="gray16"
-      filters="$filters,transpose=3" # 90° clockwise and vertical flip
+        # Offset the beginning of mmap memory by
+        # 468 full lines and 336 pixels
+        # (468 * 1404 + 336) * 4 = 2629636
+        # Discovered by davisremmel and showed in
+        # https://github.com/owulveryck/goMarkableStream/issues/140
+        skip_offset=2629632
+
+        # No transpose is needed, as dimensions are already correct
+        # But swap dimensions
+        tmp=$height
+        height=$width
+        width=$tmp
     else
-      bytes_per_pixel=1
-      pixel_format="gray8"
-      filters="$filters,transpose=2" # 90° counter-clockwise
+        # Firmware < 3.24 uses gray8/16 format
+        if [ "$byte_correction" = "true" ]; then
+            bytes_per_pixel=2
+            pixel_format="gray16"
+            filters="$filters,transpose=3" # 90° clockwise and vertical flip
+        else
+            bytes_per_pixel=1
+            pixel_format="gray8"
+            filters="$filters,transpose=2" # 90° counter-clockwise
+        fi
+
+        skip_offset=7
+
+        # color correction
+        if [ "$color_correction" = "true" ]; then
+            filters="$filters,curves=all=0.045/0 0.06/1"
+        fi
     fi
 
-    skip_offset=7
+    window_bytes="$((width * height * bytes_per_pixel))"
 
-    # color correction
-    if [ "$color_correction" = "true" ]; then
-      filters="$filters,curves=all=0.045/0 0.06/1"
-    fi
-  fi
+    # Find xochitl's process. In case of more than one pids, take the first one which contains /dev/fb0.
+    for n in $(ssh_cmd pidof xochitl); do
+        pid=$n
+        has_fb=$(ssh_cmd "grep -C1 '/dev/fb0' /proc/$pid/maps")
+        if [ "$has_fb" != "" ]; then
+            break
+        fi
+    done
 
-  window_bytes="$((width * height * bytes_per_pixel))"
+    # find framebuffer location in memory
+    # it is actually the map allocated _after_ the fb0 mmap
+    read_address="grep -C1 '/dev/fb0' /proc/$pid/maps | tail -n1 | sed 's/-.*$//'"
+    skip_bytes_hex="$(ssh_cmd "$read_address")"
+    skip_bytes="$((0x$skip_bytes_hex + skip_offset))"
 
-  # Find xochitl's process. In case of more than one pids, take the first one which contains /dev/fb0.
-  for n in $(ssh_cmd pidof xochitl); do
-    pid=$n
-    has_fb=$(ssh_cmd "grep -C1 '/dev/fb0' /proc/$pid/maps")
-    if [ "$has_fb" != "" ]; then
-      break
-    fi
-  done
-
-  # find framebuffer location in memory
-  # it is actually the map allocated _after_ the fb0 mmap
-  read_address="grep -C1 '/dev/fb0' /proc/$pid/maps | tail -n1 | sed 's/-.*$//'"
-  skip_bytes_hex="$(ssh_cmd "$read_address")"
-  skip_bytes="$((0x$skip_bytes_hex + skip_offset))"
-
-  # remarkable's dd does not have iflag=skip_bytes, so cut the command in two:
-  # one to seek the exact amount and the second to copy in a large chunk
-  # bytes are located in, and then we trim the resulting data with what we need.
-  head_fb0="{ dd bs=1 skip=$skip_bytes count=0 && dd bs=$window_bytes count=1; } < /proc/$pid/mem 2>/dev/null"
+    # remarkable's dd does not have iflag=skip_bytes, so cut the command in two:
+    # one to seek the exact amount and the second to copy in a large chunk
+    # bytes are located in, and then we trim the resulting data with what we need.
+    head_fb0="{ dd bs=1 skip=$skip_bytes count=0 && dd bs=$window_bytes count=1; } < /proc/$pid/mem 2>/dev/null"
 
 else
 
-  if [ "$rm_version" = "reMarkable Ferrari" ]; then
-    rm_version="reMarkable Paper Pro"
-  fi
+    if [ "$rm_version" = "reMarkable Ferrari" ]; then
+        rm_version="reMarkable Paper Pro"
+    fi
 
-  echo "$rm_version not supported"
-  exit 2
+    echo "$rm_version not supported"
+    exit 2
 
 fi
 
 if [ "$invert_colors" = "true" ]; then
-  filters="$filters,negate"
+    filters="$filters,negate"
 fi
 
 ffmpeg_abs="$(command -v ffmpeg)"
 if [ -z "$ffmpeg_abs" ]; then
-  echo "ERROR:    could not find command ffmpeg on computer. please install"
-  exit 1
+    echo "ERROR:    could not find command ffmpeg on computer. please install"
+    exit 1
 fi
 lz4_abs="$(command -v lz4)"
 if [ -z "$lz4_abs" ]; then
-  echo "ERROR:    could not find command lz4 on computer. please install"
-  exit 1
+    echo "ERROR:    could not find command lz4 on computer. please install"
+    exit 1
 fi
 decompress="${lz4_abs} -d"
 
 # compression commands
 if ssh_cmd "[ -f /opt/bin/lz4 ]"; then
-  compress="/opt/bin/lz4"
+    compress="/opt/bin/lz4"
 elif ssh_cmd "[ -f ~/lz4 ]"; then # backwards compatibility
-  compress="\$HOME/lz4"
+    compress="\$HOME/lz4"
 else
-  echo
-  echo "WARNING:    lz4 not found on $rm_version."
-  echo "            It is recommended to install it for vastly improved performance."
-  echo "            Please refer to the README."
-  echo
-  compress="tee"
-  decompress="tee"
+    echo
+    echo "WARNING:    lz4 not found on $rm_version."
+    echo "            It is recommended to install it for vastly improved performance."
+    echo "            Please refer to the README."
+    echo
+    compress="tee"
+    decompress="tee"
 fi
 
 # read and compress the data on the reMarkable
 # decompress and decode the data on this machine
 ssh_cmd "$head_fb0 | $compress" |
-  $decompress |
-  "${ffmpeg_abs}" -y \
-    -f rawvideo \
-    -pixel_format $pixel_format \
-    -video_size "$width,$height" \
-    -i - \
-    -vf "$filters" \
-    -frames:v 1 "$output_file"
+    $decompress |
+    "${ffmpeg_abs}" -y \
+        -f rawvideo \
+        -pixel_format $pixel_format \
+        -video_size "$width,$height" \
+        -i - \
+        -vf "$filters" \
+        -frames:v 1 "$output_file"
 
 if [ "$construct_sketch" = "true" ]; then
-  echo "Constructing sketch"
-  magick "${output_file}" -fill white -draw 'rectangle 0,0 100,100' \
-    -fill white -draw "rectangle 0,1870 2,1872" \
-    -transparent white -trim -resize 50% +repage "${output_file}"
+    echo "Constructing sketch"
+    magick "${output_file}" -fill white -draw 'rectangle 0,0 100,100' \
+        -fill white -draw "rectangle 0,1870 2,1872" \
+        -transparent white -trim -resize 50% +repage "${output_file}"
 
-  output_file=$(realpath "${output_file}")
+    output_file=$(realpath "${output_file}")
 fi
 
 # Copy to clipboard
 if [ "$copy_to_clipboard" = "true" ]; then
-  echo "Copying to clipboard"
-  xclip -selection clipboard -t image/png -i "${output_file}"
+    echo "Copying to clipboard"
+    xclip -selection clipboard -t image/png -i "${output_file}"
 fi
 
 if [ "$display_output_file" = "true" ]; then
-  # show the snapshot
-  feh --fullscreen "$output_file"
+    # show the snapshot
+    feh --fullscreen "$output_file"
 fi
