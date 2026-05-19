@@ -1,4 +1,4 @@
-# reSnap ![version](https://img.shields.io/badge/version-2.5.1-blue)
+# reSnap ![version](https://img.shields.io/badge/version-2.5.3-blue)
 
 reMarkable screenshots over ssh.
 
@@ -11,7 +11,7 @@ reMarkable screenshots over ssh.
 ## Prequisites
 
 - SSH-access to your reMarkable tablet.
-  [Tutorial](https://remarkablewiki.com/tech/ssh) <br>
+  [Tutorial](https://remarkable.guide/guide/access/ssh.html) <br>
   (recommended: SSH-key so you don't have to type in your root password every time)
 
 - The following programs are required on your computer:

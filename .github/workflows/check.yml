@@ -15,7 +15,7 @@ jobs:
       - name: Shell Formatter
         uses: luizm/action-sh-checker@v0.3.0
         env:
-          SHFMT_OPTS: -i 2
+          SHFMT_OPTS: -i 4
 
       - name: Release
         if: startsWith(github.ref, 'refs/tags/')
